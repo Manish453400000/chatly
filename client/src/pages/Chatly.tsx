@@ -1,17 +1,17 @@
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'; 
+import { Outlet, useNavigate } from 'react-router-dom'; 
 
 const Chatly = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const navigate = useNavigate();
   useEffect(() => {
     if (!isAuthenticated) {
-      navigate('/')
+      navigate('/app/auth/sign-in')
     }
   }, [])
   return (
     <div>
-      chatly home page
+      <Outlet />
     </div>
   )
 }

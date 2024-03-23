@@ -4,3 +4,19 @@
   overflow-x: hidden;
   box-sizing: border-box;
 }
+.bg-primary {
+  background: #252525;
+}
+.bg-secondary {
+  background: #2f2f2f;
+}
+
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.test{
+  border: 1px solid blueviolet;
+}
