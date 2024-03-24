@@ -1,0 +1,21 @@
+.chats-list {
+  border-top-left-radius: 15px;
+  // width: clamp(16rem, 30%, 39rem);
+  width: 30%;
+  min-width: 16rem;
+  height: 100%;
+  padding: 1rem .5rem 0 .5rem;
+}
+
+.chat-box {
+  flex: 1;
+  height: 100%;
+}
+
+.search-box{
+  border-bottom: 1px solid white;
+}
+
+.last-messages{
+  text-overflow: ellipsis;
+}
