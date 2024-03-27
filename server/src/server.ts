@@ -1,49 +1,28 @@
-import http from 'http'
-import express from 'express'
-import {Server} from 'socket.io'
+import dotenv from 'dotenv';
+import express from 'express';
+import cors from 'cors';
 
-import dotenv from 'dotenv'
-dotenv.config()
-
-import cors from 'cors'
-
+dotenv.config({
+  path: "./.env",
+});
 
 const app = express();
-const server =  http.createServer(app)
-const io = new Server(server, {
-  cors: {
-    origin: process.env.CORS_ORIGIN,
-    credentials: true,
-  }
-});
 
 const PORT = process.env.PORT || 8000;
 
-//middleware
-app.use(cors({
-  origin: process.env.CORS_ORIGIN,
-  credentials: true,
-}))
+
+app.use(express.json());
+app.use(cors())
 
 
-app.get('/', (req, res) => {
-  res.send("server is working...")
-})
-
-io.on('connection', (socket) => {
-  console.log('a user connected');
-  console.log(`id: ${socket.id}`);
-  
-  socket.on('disconnect', () => {
-    console.log('User disconnected');
-  })
-
-  socket.on('chat message', (msg) => {
-    console.log('message: ' + msg);
-    io.emit('chat message', msg)    
-  })
-})
-
-server.listen(PORT, () => {
-  console.log(`Server is listening on port ${PORT}`);
-})
+const start = async () => {
+  try{
+    //connect to database first
+    app.listen(PORT, () => {
+      console.log(`server listening on http://localhost:${PORT}`);
+      
+    })
+  }catch(err){
+    console.log(`somthing went wrong while starting server: ${err}`);
+  }
+}
