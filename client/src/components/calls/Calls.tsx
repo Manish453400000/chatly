@@ -1,11 +1,11 @@
 import React from 'react'
 
-const Group = () => {
+const Calls = () => {
   return (
     <div>
-      group
+      calls
     </div>
   )
 }
 
-export default Group
+export default Calls

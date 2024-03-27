@@ -23,3 +23,24 @@
 .test{
   border: 1px solid blueviolet;
 }
+
+
+.skeleton-text {
+  height: 8px;
+  border-radius: 5px;
+}
+
+.skeleton {
+  opacity: 0.3;
+  animation: skeleton 1s infinite alternate;
+}
+
+@keyframes skeleton {
+  0% {
+    background: #585959;
+  }
+
+  100% {
+    background: #a3a3a3;
+  }
+}

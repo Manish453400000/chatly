@@ -59,7 +59,7 @@ const Chat = () => {
 
       <div className="chat-box-footer w-full h-[4rem] px-[.5rem] bg-secondary flex gap-[8px] items-center text-[20px]">
         <span><i className='bx bx-smile p-[8px] flex-center hover:bg-[#5a57577b] rounded-[5px]'></i></span>
-        <span><i className='bx bx-file-blank p-[8px] flex-center hover:bg-[#5a57577b] rounded-[5px]'></i></span>
+        <span><i className="fa-solid fa-paperclip text-[16px]"></i></span>
         <input type="text" placeholder='Type a message' className='text-[14px] bg-transparent px-[5px] py-[5px] flex-1 border-none outline-none' />
         <span><i className='bx bx-microphone p-[8px] flex-center hover:bg-[#5a57577b] rounded-[5px]' ></i></span>
       </div>

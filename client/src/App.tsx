@@ -14,12 +14,13 @@ import ChatList from "./components/chat/ChatList"
 // const Profile = lazy(() => import ("./pages/profile/Profile"))
 
 import Home from "./pages/home/Home"
-import Auth from "./pages/auth/Auth"
-import Login from "./pages/auth/Login"
-import SignUp from "./pages/auth/SignUp"
+import Auth from "./components/auth/Auth"
+import Login from "./components/auth/Login"
+import SignUp from "./components/auth/SignUp"
 import Chat from "./components/chat/Chat"
-import Group from "./pages/Group/Group"
-import Profile from "./pages/profile/Profile"
+import Profile from "./components/profile/Profile"
+import Status from "./components/status/Status"
+import Calls from "./components/calls/Calls"
 
 function App() {
 
@@ -35,14 +36,13 @@ function App() {
             <Route path="/app/auth/sign-in" element={<Login />} />
             <Route path="/app/auth/sign-up" element={<SignUp />} />
           </Route> 
+
           <Route path="/app/home" element={<Home />} >
-            <Route path="/app/home/status" element={<ChatList />} /> 
-            <Route path="/app/home/calls" element={<ChatList />} /> 
+            <Route path="/app/home/status" element={<Status />} /> 
+            <Route path="/app/home/calls" element={<Calls />} /> 
             <Route path="/app/home/chats" element={<ChatList />} >
               <Route path="/app/home/chats/user/:id" element={<Chat />} />
             </Route> 
-            <Route path="/app/home/group" element={<Group />} /> 
-            <Route path="/app/home/profile" element={<Profile />} /> 
           </Route>
         </Route>
       </Routes>

@@ -8,8 +8,9 @@ import './scss/index.scss'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
     <Provider store={store}>
-        <div onContextMenu={(e) => e.preventDefault()}>
+        <div>
             <App />
         </div>
     </Provider>
 )
+// onContextMenu={(e) => e.preventDefault()}

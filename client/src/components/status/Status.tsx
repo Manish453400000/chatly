@@ -1,11 +1,11 @@
 import React from 'react'
 
-const Profile = () => {
+const Status = () => {
   return (
     <div>
-      profile
+      status
     </div>
   )
 }
 
-export default Profile
+export default Status
