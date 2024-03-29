@@ -5,34 +5,59 @@ import jwt from 'jsonwebtoken';
 import dotenv from "dotenv";
 dotenv.config();
 
+
+import { 
+  availableUserRoles,
+  userRolesEnum
+} from "../utils/constants";
+
 const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET || 'lljfjlsaja';
 const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET || 'jflsjflfjslajf';
 
 const userSchema = new Schema({
-  name: {
-    type: String,
-    required: [true, "name is required"]
+  avatar: {
+    type: {
+      url: String,
+      localPath: String,
+    },
+    default: {
+      url: `http://res.cloudinary.com/dwl9iesij/image/upload/v1703841893/cegzmjvgus1rghjfnhwf.jpg`,
+      localPath: '',
+    }
   },
   username: {
     type: String,
     required: [true, "username is required"],
     unique: true,
+    lowercase: true,
+    trim: true,
+    index: true,
+  },
+  email: {
+    type: String,
+    required: [true, "email is required"],
+    unique: true,
+    lowercase: true,
+    trim: true,
+  },
+  role: {
+    type: String,
+    enum: availableUserRoles,
+    default: userRolesEnum.USER,
+    required: true,
   },
   password: {
     type: String,
     required: [true, "password is required"],
     select: false,
   },
-  avatar: {
-    public_id: {
-      type: String,
-      required: true,
-    },
-    url:{
-      type: String, // cloudinary url
-      required: true,
-    }
+  isEmailVerified: {
+    type: Boolean,
+    default: false,
   },
+  refreshToken: {
+    type: String
+  }
 }, {timestamps: true})
 
 userSchema.pre('save', async function(next) {

@@ -1,28 +1,37 @@
 import dotenv from 'dotenv';
-import express from 'express';
-import cors from 'cors';
+import { server } from './app';
+import { connectDB } from './db/connectDB';
 
 dotenv.config({
   path: "./.env",
 });
 
-const app = express();
+const nodeVersion = +process.version?.slice(1).split(".")[0] || 0;
 
-const PORT = process.env.PORT || 8000;
-
-
-app.use(express.json());
-app.use(cors())
-
-
-const start = async () => {
-  try{
-    //connect to database first
-    app.listen(PORT, () => {
-      console.log(`server listening on http://localhost:${PORT}`);
-      
-    })
-  }catch(err){
-    console.log(`somthing went wrong while starting server: ${err}`);
-  }
+const startServer = async () => {
+  server.listen(process.env.PORT || 8080, () => {
+    console.info(
+      `✅ server is running at: http://localhost:${process.env.PORT}`  
+    )
+    console.log('😁 you are good to go now');
+  })
 }
+
+(async () => {
+  if(nodeVersion >= 14) {
+    try{
+      await connectDB();
+      startServer();
+    }catch(err){
+      console.log("mongoDB connection error: ", err)
+    }
+  }else {
+    connectDB()
+      .then(() => {
+        startServer();
+      })
+      .catch((err) => {
+        console.log("mongoDB connection error: ", err)
+      })
+  }
+})()
