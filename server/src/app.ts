@@ -18,9 +18,7 @@ app.set("io", io); //using this to avoid usage of `global` variables
 
 app.use(
   cors({
-    origin:
-      process.env.CORS_ORIGIN === "*" ? "*" 
-      : process.env.CORS_ORIGIN?.split(","),
+    origin: "http://localhost:3000",
     credentials: true,
   })
 )

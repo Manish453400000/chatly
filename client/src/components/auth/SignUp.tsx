@@ -1,3 +1,6 @@
+import { requestHandler } from '../../utils'
+import { registerUser } from '../../api/api'
+import { LocalStorage } from '../../utils'
 import React, { useEffect, useRef, useState } from 'react'
 
 import { google } from '../../assets/icons'
@@ -11,7 +14,6 @@ const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
 
   const navigate = useNavigate()
-
   const passwordElement = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
@@ -30,9 +32,37 @@ const SignUp = () => {
     }
   }
 
-  const handelSignUp = (e:React.FormEvent<HTMLFormElement>) => {
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [data, setData] = useState({
+    username: "",
+    email: "",
+    password: ""
+  })
+  useEffect(() => {
+    setData({
+      username: username,
+      email: email,
+      password: password,
+    })
+  }, [username, password, email])
+  const handelSignUp = async (e:React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log('submit');
+    if(username.trim().length <= 6 || password.trim().length <= 6) {
+      alert("please enter valid username and password")
+      return
+    }
+    await requestHandler(
+      async () => await registerUser(data),
+      setIsLoading,
+      (response) => {
+        const { data } = response;
+        console.log(data);
+        LocalStorage.set("token", data.accessToken)
+        navigate("/app/home/chats")
+      },
+      alert
+    )
     
   }
 

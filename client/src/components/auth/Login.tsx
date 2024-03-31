@@ -1,15 +1,31 @@
 import React, { useEffect, useRef, useState } from 'react'
 
+import { LocalStorage, requestHandler } from '../../utils'
+import { loginUser } from '../../api/api'
+
 import { google } from '../../assets/icons'
 import { useNavigate } from 'react-router-dom'
 
 const Login = () => {
-  const [email, setEmail] = useState('')
+  const [isLoading, setIsLoading] = useState(false);
+  const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const [data, setData] = useState({
+    username: "",
+    password: "",
+  })
   const [showPassword, setShowPassword] = useState(false);
+
   
   const navigate = useNavigate()
   const passwordElement = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    setData({
+      username: username,
+      password: password,
+    })
+  }, [username, password])
 
   useEffect(() => {
     if(passwordElement.current){
@@ -27,19 +43,38 @@ const Login = () => {
     }
   }
 
+  // Function to handel Login
+  const handelLogin = async (e:React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if(username.trim().length <= 6 || password.trim().length <= 6) {
+      alert("please enter valid username and password")
+      return
+    }
+    await requestHandler(
+      async () => await loginUser(data),
+      setIsLoading,
+      (response) => {
+        const { data } = response;
+        console.log(data);
+        LocalStorage.set("token", data.accessToken)
+        navigate("/app/home/chats")
+      },
+      alert
+    )
+  }
   return (
     <div className="login-component bg-secondary">
-      <form className='form-component'>
+      <form className='form-component' onSubmit={handelLogin}>
         <h3 className='heading font-bold'>Login</h3>
         <div className="input-component">
-          <span>Email or Username</span>
+          <span>Username</span>
           <input 
-          type="email" 
-          name="email" 
-          id="email" 
-          placeholder='Enter your email address'
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          type="username" 
+          name="username" 
+          id="username" 
+          placeholder='Enter your username'
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
           />
         </div>
         <div className="input-component">
@@ -59,7 +94,7 @@ const Login = () => {
           </span>
         </div>
 
-        <button className="form-button">Login</button>
+        <button type='submit' className="form-button">Login</button>
       </form>
       <div className="other-component">
         <hr />

@@ -7,6 +7,7 @@ export const asyncHandler = (func:(req:Request, res:Response, next:NextFunction)
     res.status(500).json({
       success: false,
       response: err instanceof Error ? err.message: 'Unexpected error occurred',
+      details: {err: err}
     })
   }
 }
