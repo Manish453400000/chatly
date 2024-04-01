@@ -21,6 +21,7 @@ import Chat from "./components/chat/Chat"
 import Profile from "./components/profile/Profile"
 import Status from "./components/status/Status"
 import Calls from "./components/calls/Calls"
+import SearchList from "./components/search/SearchList"
 
 function App() {
 
@@ -40,6 +41,7 @@ function App() {
           <Route path="/app/home" element={<Home />} >
             <Route path="/app/home/status" element={<Status />} /> 
             <Route path="/app/home/calls" element={<Calls />} /> 
+            <Route path="/app/home/requests" element={<SearchList />} />
             <Route path="/app/home/chats" element={<ChatList />} >
               <Route path="/app/home/chats/user/:id" element={<Chat />} />
             </Route> 

@@ -57,3 +57,16 @@ export class LocalStorage {
     localStorage.clear();
   }
 }
+
+export const debouncer: (
+  callback: (...args: any[]) => void,
+  delay: number
+) => (...args: any[]) => void = (callback, delay = 500) => {
+  let timeOut: any;
+  return async (...args: any[]) => {
+    clearTimeout(timeOut);
+    timeOut = setTimeout(() => {
+      callback(...args);
+    }, delay);
+  };
+};

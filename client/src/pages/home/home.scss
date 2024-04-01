@@ -30,11 +30,19 @@
       align-items: center;
       
     }
-    .active{
-      background: #3b3a3a;
-      border-left: 2px solid #9fcf56;
-    }
   }
+}
+.nav-btns{
+  padding: 8px;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.active{
+  background: #3b3a3a;
+  border-left: 2px solid #9fcf56;
 }
 
 .main-container{

@@ -1,0 +1,22 @@
+return (
+        <div className='main-container flex gap-[2px]'>
+      <div className="content-list-container bg-secondary px-[.5rem] w-full md:w-[30%] md:max-w-[30rem] min-w-[16rem] flex flex-col gap-[.5rem]">
+        <div className="list-header flex flex-col justify-center gap-[10px] px-[.5rem] pt-[1rem]">
+          <div className="featurs flex justify-between">
+            <span className='font-semibold text-[20px]'>Requests</span>
+            <span className='text-[20px] flex gap-[9px]'>
+              <span className='flex-center'><i className='bx bx-bell'></i></span>
+            </span>
+          </div>
+          <div className="search-box flex items-center bg-[#464545] rounded-[4px]">
+            <span className='flex-center'><i className='bx bx-search-alt-2 py-[5px] pl-[5px]' ></i></span>
+            <input type="text" placeholder='search or start a new chat' className=' px-[7px] py-[4px] bg-transparent text-[14px] border-none outline-none flex-1' />
+          </div>
+        </div>
+        <div className="list test flex-1 ">
+
+        </div>
+      </div>
+      <div className="details-list-container bg-secondary flex-1 test "></div>
+    </div>
+  )

@@ -3,8 +3,11 @@ import React, { useEffect, useRef, useState } from 'react'
 import { LocalStorage, requestHandler } from '../../utils'
 import { loginUser } from '../../api/api'
 
+import { addUser } from '../../app/features/userSlice'
+
 import { google } from '../../assets/icons'
 import { useNavigate } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
 
 const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -16,7 +19,7 @@ const Login = () => {
   })
   const [showPassword, setShowPassword] = useState(false);
 
-  
+  const dispatch = useDispatch();
   const navigate = useNavigate()
   const passwordElement = useRef<HTMLInputElement>(null)
 
@@ -55,7 +58,11 @@ const Login = () => {
       setIsLoading,
       (response) => {
         const { data } = response;
-        console.log(data);
+        const payload = {
+          isAuthenticated: response.success,
+          data: data,
+        };
+        dispatch(addUser(payload))
         LocalStorage.set("token", data.accessToken)
         navigate("/app/home/chats")
       },

@@ -42,9 +42,14 @@ const logoutUser = () => {
   return apiClient.post('/auth/logout');
 }
 
+const searchUsers = (query:string) => {
+  return apiClient.get(`/request/search?searchQuery=${query}`);
+}
+
 export {
   registerUser,
   loginUser,
   logoutUser,
-  getUser
+  getUser,
+  searchUsers,
 }

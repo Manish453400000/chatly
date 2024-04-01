@@ -5,6 +5,9 @@ import React, { useEffect, useRef, useState } from 'react'
 
 import { google } from '../../assets/icons'
 import { useNavigate } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+
+import { addUser } from '../../app/features/userSlice'
 
 const SignUp = () => {
   const [username, setUsername] = useState('')
@@ -14,6 +17,7 @@ const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
 
   const navigate = useNavigate()
+  const dispatch = useDispatch();
   const passwordElement = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
@@ -57,7 +61,11 @@ const SignUp = () => {
       setIsLoading,
       (response) => {
         const { data } = response;
-        console.log(data);
+        const payload = {
+          isAuthenticated: response.success,
+          data: data,
+        };
+        dispatch(addUser(payload))
         LocalStorage.set("token", data.accessToken)
         navigate("/app/home/chats")
       },
