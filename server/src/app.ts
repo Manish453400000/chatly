@@ -36,7 +36,7 @@ app.use(cookieParser());
 import { userRouter } from './routers/user.routes';
 import { requestRouter } from './routers/request.routes';
 
-app.use("/api/v1/auth", userRouter)
+app.use("/api/v1/user", userRouter)
 app.use("/api/v1/request", requestRouter)
 
 app.get('/', (req, res) => {

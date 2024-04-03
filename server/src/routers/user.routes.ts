@@ -1,6 +1,6 @@
 import { Router } from "express";
-// import { upload } from "../middleware/multer.middleware";
-import { registerUser, loginUser, logoutUser, refreshAccessToken, getUser } from "../controllers/user.controller";
+import { upload } from "../middleware/multer.middleware";
+import { registerUser, loginUser, logoutUser, refreshAccessToken, getUser, uploadAvatar } from "../controllers/user.controller";
 import { verifyJwt } from "../middleware/auth.middleware";
 
 const userRouter = Router();
@@ -10,6 +10,11 @@ userRouter.route('/login').post(loginUser)
 userRouter.route('/refresh-access-token').post(refreshAccessToken)
   // private routes
 userRouter.route('/logout').post(verifyJwt, logoutUser)
+userRouter.route('/edit/avatar').post(
+  upload.single('avatar'),
+  verifyJwt, 
+  uploadAvatar
+)
 userRouter.route('/get-user').post(verifyJwt, getUser)
 
 export { userRouter };

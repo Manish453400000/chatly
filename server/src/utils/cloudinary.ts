@@ -18,6 +18,7 @@ const cloudinaryUpload = async (localFilePath: string) => {
     const response = await cloudinary.uploader.upload(localFilePath, {
       resource_type: "auto",
     });
+    return response;
     fs.unlinkSync(localFilePath); // remove temporary files 
   } catch (error) {
     fs.unlinkSync(localFilePath); // remove temporary files 

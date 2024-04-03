@@ -21,7 +21,7 @@ const userSchema = new Schema({
       localPath: String,
     },
     default: {
-      url: `http://res.cloudinary.com/dwl9iesij/image/upload/v1703841893/cegzmjvgus1rghjfnhwf.jpg`,
+      url: `http://res.cloudinary.com/dwl9iesij/image/upload/v1712124837/g1ehaegmay2e30bhc2ko.jpg`,
       localPath: '',
     }
   },

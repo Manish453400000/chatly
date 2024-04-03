@@ -5,6 +5,7 @@ import { ApiError } from "../utils/apiError.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { userRolesEnum } from "../utils/constants.js";
 import { ApiResponse } from "../utils/apiResponse.js";
+import { cloudinaryUpload } from '../utils/cloudinary.js';
 
 const generateTokens = async (userId: Types.ObjectId) => {
   try {
@@ -130,6 +131,55 @@ const logoutUser = asyncHandler(async (req, res) => {
   )
 })
 
+const uploadAvatar = asyncHandler(async (req, res) => {
+  const { user } = req.body;
+  console.log(user)
+
+  const avatarOnLocalPath = req.file?.path;
+  if(!avatarOnLocalPath){
+    throw new ApiError(401, "avatar is required");
+  }
+  
+  const avatar:any = await cloudinaryUpload(avatarOnLocalPath);
+  console.log(avatar);
+  if(!avatar.url) {
+    throw new ApiError(500, "somthing went wrong while uploading avatar")
+  }
+  
+
+  const updatedUser = await User.findByIdAndUpdate(
+    user?._id,
+    {
+      $set: {
+        avatar: {
+          localPath: "",
+          url: avatar?.url,
+        }
+      }
+    },
+    {
+      new: true,
+    }
+  ).select(" -password -refreshToken");
+  if(!updatedUser) {
+    throw new ApiError(500, "Something went wrong while updating avatar")
+  }
+
+  //send res
+  return res
+  .status(200)
+  .json(
+    new ApiResponse(
+      200, 
+      {
+        user: updatedUser
+      },
+      "avatar updated successfully",
+      true
+    )
+  )
+})
+
 const refreshAccessToken = asyncHandler(async (req, res) => {
   const incomingRefreshToken = req.cookies.refreshToken || req.body.refreshToken;
   if(!incomingRefreshToken) {
@@ -200,4 +250,4 @@ const getUser = asyncHandler(async(req, res) => {
   )
 })
 
-export { registerUser, loginUser, logoutUser, refreshAccessToken, getUser }
+export { registerUser, loginUser, logoutUser, refreshAccessToken, getUser, uploadAvatar }
