@@ -27,19 +27,23 @@ const registerUser = (data: {
   email: string,
   password: string,
 }) => {
-  return apiClient.post('/auth/register', data)
+  return apiClient.post('/user/register', data)
 }
 
 const loginUser = (data: { username: string; password: string}) => {
-  return apiClient.post('/auth/login', data);
+  return apiClient.post('/user/login', data);
 }
 
 const getUser = async () => {
-  return await apiClient.post('/auth/get-user')
+  return await apiClient.post('/user/get-user')
 }
 
 const logoutUser = () => {
-  return apiClient.post('/auth/logout');
+  return apiClient.post('/user/logout');
+}
+
+const editAvatar = async (data:any) => {
+  return await apiClient.post('/user/edit/avatar', data)
 }
 
 const searchUsers = (query:string) => {
@@ -52,4 +56,5 @@ export {
   logoutUser,
   getUser,
   searchUsers,
+  editAvatar,
 }

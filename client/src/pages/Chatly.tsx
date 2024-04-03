@@ -15,7 +15,6 @@ const Chatly = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    console.log(isAuthenticated);
     if (!isAuthenticated) {
       navigate('/app/auth/sign-in')
     }

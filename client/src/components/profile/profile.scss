@@ -1,0 +1,97 @@
+.options {
+  background: #2a2a2ab3;
+  backdrop-filter: blur(5px);
+  width: 10rem;
+  padding: 12px 5px;
+  display: flex;
+  flex-direction: column;
+  .top{
+    ul{
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      li{
+        padding: 4px 15px;
+        border-top-right-radius: 5px;
+        border-bottom-right-radius: 5px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        font-size: 14px;
+        font-weight: 100;
+        cursor: pointer;
+        .bx {
+          font-size: 18px;
+          font-weight: 100;
+        }
+      }
+      .non-active {
+        border-left: 2px solid transparent;
+        &:hover {
+          background: #343333e0;
+        }
+      }
+    }
+  }
+  .bottom{
+    .prof {
+        padding: 4px 15px;
+        border-top-right-radius: 5px;
+        border-bottom-right-radius: 5px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        font-size: 14px;
+        font-weight: 100;
+        cursor: pointer;
+        .bx {
+          font-size: 18px;
+          font-weight: 100;
+        }
+      }
+      .non-active {
+        border-left: 2px solid transparent;
+
+        &:hover {
+          background: #343333e0;
+        }
+      }
+  }
+}
+
+.option-content{
+  background: #3535358e;
+  backdrop-filter: blur(5px);
+  border-left: 2px solid black;
+}
+
+.main-profile-box{
+  box-shadow: 0 0 10px rgba(32, 32, 32, 0.685);
+}
+
+// .avatar-profile{
+//   position: relative;
+//   &:hover::after{
+//     font-family: "Font Awesome 6 Free";
+//     content: '\f64f';
+//     background: #00000083;
+//     color: white;
+//     font-size: 30px;
+//     backdrop-filter: blur(1px);
+//     display: flex;
+//     justify-content: center;
+//     align-items: center;
+//     width: 100%;
+//     height: 100%;
+//     border-radius: 50%;
+//     position: absolute;
+//     top: 0;
+//     left: 0;
+//     z-index: 10;
+//     border: 1px solid rgba(64, 62, 62, 0);
+//   }
+// }
+
+.pen{
+  border: 2px solid rgb(248, 247, 247);
+}

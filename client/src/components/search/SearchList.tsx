@@ -5,8 +5,9 @@ import { requestHandler } from '../../utils'
 
 //skeleton chatList
 const skChatItems = () => {
+
   return(
-    <div className='chat-item flex-shrink-0 h-[3.4rem] flex gap-[10px] items-center py-[10px] px-[.5rem] w-full rounded-[5px] overflow-hidden'>
+    <div className='chat-item flex-shrink-0 h-[3.4rem] flex gap-[10px] items-center py-[10px] px-[.5rem] w-full rounded-[5px] overflow-hidden' key={Math.floor(Math.random()*1000)}>
       <div className="logo w-[34px] h-[34px] rounded-full skeleton"></div>
       <div className="middle flex-1 flex flex-col gap-[5px]">
         <div className="top flex justify-between">
@@ -26,7 +27,7 @@ interface User {
     _id: string,
   },
   username: string,
-  __id: string,
+  _id: string,
 }
 
 const SearchList = () => {
@@ -41,7 +42,7 @@ const SearchList = () => {
           _id: "",
         },
         username: "",
-        __id: "",
+        _id: "",
       },
   ])
 
@@ -52,7 +53,6 @@ const SearchList = () => {
       setIsLoading,
       (response) => {
         const { data } = response;
-        console.log(data);
         setIsDataEmpty(false)
         // if(data.length = 0) {
         //   setIsDataEmpty(true);
@@ -120,7 +120,7 @@ const SearchList = () => {
             <div className='text-center text-[13px] text-[#838080] h-full flex-center'>{defaultMessage}</div>
             :
             data.map(user => (
-                <div className='w-full flex-shrink-0 flex items-center gap-[10px] py-[10px] px-[.5rem] hover:bg-[#373737] rounded-[5px]' key={user.__id} >
+                <div className='w-full flex-shrink-0 flex items-center gap-[10px] py-[10px] px-[.5rem] hover:bg-[#373737] rounded-[5px]' key={user._id} >
                   <div className="left w-[35px] h-[35px] rounded-full overflow-hidden">
                     <img src={user.avatar.url} alt={user.username} className='w-full object-cover object-center' loading='lazy' />
                   </div>

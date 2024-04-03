@@ -1,28 +1,16 @@
-import { Outlet, useNavigate } from 'react-router-dom'
+import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import './home.scss'
 import Profile from '../../components/profile/Profile'
 import { useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
+import { User } from '../../interface/user'
 
-interface User {
-  avatar: {
-    localPath: string;
-    url: string,
-    _id: string,
-  },
-  createdAt: string,
-  email: string,
-  isEmailVerified: boolean,
-  role: string,
-  updatedAt: string,
-  username: string,
-  __v: number,
-  __id: string,
-}
 
 const Home = () => {
   const [showProfile, setShowProfile] = useState(false);
   const profileContainer = useRef<HTMLDivElement>(null);
+
+  const location = useLocation();
 
   const navigate = useNavigate();
 
@@ -47,10 +35,8 @@ const Home = () => {
 
   useEffect(() => {
     if(data.isAuthenticated){
-      console.log(data);
       const { user } = data.data;
       setUser(user);
-      console.log(user);
     }
   },[data])
 
@@ -61,8 +47,14 @@ const Home = () => {
     navigate(`/app/home/${type}`)
   }
 
+  useEffect(() => {
+    const type:string = location?.pathname?.split('/')?.pop() || '';
+    handelNavigation(type)
+    
+  }, [location.pathname])
+
   return (
-    <div className='home-container bg-primary'>
+    <div className='home-container bg-primary overflow-hidden'>
       <div className="navigation-bar">
         <div className="top">
           <span className={`${activeNav == 'chats' ? 'active':''} nav-btns cursor-pointer`} onClick={() => handelNavigation('chats')}><i className='bx bx-message-rounded-detail'></i></span>
@@ -72,7 +64,7 @@ const Home = () => {
         <div className="bottom">
           <span className={`${activeNav == 'status' ? 'active':''} nav-btns cursor-pointer`}><i className='bx bx-star' ></i></span>
           <span className={`${activeNav == 'setting' ? 'active':''} nav-btns cursor-pointer`} onClick={() => setShowProfile(prev => !prev)}><i className='bx bx-cog' ></i></span>
-          <div className=' rounded-full w-[35px] aspect-square' onClick={() => setShowProfile(prev => !prev)}>
+          <div className=' rounded-full w-[25px] aspect-square' onClick={() => setShowProfile(prev => !prev)}>
             <img src={user.avatar.url} alt="profile" />
           </div>
         </div>
@@ -80,19 +72,19 @@ const Home = () => {
       <div className="main-container">
         <Outlet />
       </div>
-      <div className={` ${showProfile ? 'flex': 'hidden'} profile-wrapper w-screen h-screen absolute top-0 left-0 bg-[green] `} onClick={(e) => {
-        console.log(e.target);
-        console.log(profileContainer.current);
-        
-        if(profileContainer.current?.contains(e.target as Node)){
-          setShowProfile(false);
-          console.log('fh');
-          
-        }
-      }}>
-          <div className="profile-container w-[40px] h-[40px] bg-[red]" ref={profileContainer}>
-            <Profile/>
+      <div className={`${showProfile ? '': 'hidden'} floating-container w-full h-full absolute  left-0 bottom-0 z-20 overflow-y-hidden`}>
+        <div className="box-container relative h-full" onClick={(e) => {
+          if(profileContainer){
+            const item = profileContainer.current;
+            if(!item?.contains(e.target as Node)){
+              setShowProfile(false);
+            }
+          }
+        }}>
+          <div className="" ref={profileContainer}>
+            <Profile />
           </div>
+        </div>
       </div>
     </div>
   )

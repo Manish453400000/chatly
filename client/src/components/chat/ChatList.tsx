@@ -47,7 +47,7 @@ const ChatList = () => {
         </div>
         <div className="search-box flex items-center bg-[#464545] rounded-[4px]">
           <span className='flex-center'><i className='bx bx-search-alt-2 py-[5px] pl-[5px]' ></i></span>
-          <input type="text" placeholder='search or start a new chat' className=' px-[7px] py-[4px] bg-transparent text-[14px] border-none outline-none flex-1' />
+          <input name='search-chats' type="text" placeholder='search or start a new chat' className=' px-[7px] py-[4px] bg-transparent text-[14px] border-none outline-none flex-1' />
         </div>
       </div>
       <div className="friend-list flex-1 flex flex-col gap-[5px] overflow-auto">

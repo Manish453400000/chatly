@@ -112,7 +112,7 @@ const SignUp = () => {
           onChange={(e) => setPassword(e.target.value)}
           />
           <span className='flex gap-[4px] items-center'>
-            <input type="checkbox" onClick={(e) =>handelShowPassword(e)} />
+            <input name='checkbox2' type="checkbox" onClick={(e) =>handelShowPassword(e)} />
             <span>show password</span>
           </span>
         </div>
@@ -128,7 +128,9 @@ const SignUp = () => {
           />
         </div>
 
-        <button type='submit' className="form-button">Sign Up</button>
+        <button type='submit' className="form-button">
+          {isLoading ? <i className="fa-solid fa-gear fa-spin"></i> :'Register'}
+        </button>
       </form>
       <div className="other-component">
         <hr />
