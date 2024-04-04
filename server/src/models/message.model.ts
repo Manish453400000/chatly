@@ -3,14 +3,13 @@ import { Schema, model, Types } from "mongoose";
 const messageSchema = new Schema({
   content: String,
   attachments: {
-    public_id: {
-      type: String,
-      required: true,
-    },
-    url:{
-      type: String, // cloudinary url
-      required: true,
-    }
+    type:[
+      {
+        url: String, // cloudinary url
+        localPath: String,
+      }
+    ],
+    default: [],
   },
   sender: {
     type: Types.ObjectId,

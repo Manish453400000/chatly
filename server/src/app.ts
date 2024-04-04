@@ -9,8 +9,8 @@ const server = createServer(app);
 const io = new Server(server, {
   pingTimeout: 60000,
   cors: {
-    origin: process.env.CORS_ORIGIN || "http://localhost:5173",
-    credentials: false,
+    origin: "http://localhost:3000",
+    credentials: true,
   }
 })
 
@@ -35,9 +35,11 @@ app.use(cookieParser());
 
 import { userRouter } from './routers/user.routes';
 import { requestRouter } from './routers/request.routes';
+import { chatRouter } from './routers/chat.routes';
 
 app.use("/api/v1/user", userRouter)
 app.use("/api/v1/request", requestRouter)
+app.use("/api/v1/chats", chatRouter)
 
 app.get('/', (req, res) => {
   res.send('hello world')

@@ -50,6 +50,10 @@ const searchUsers = (query:string) => {
   return apiClient.get(`/request/search?searchQuery=${query}`);
 }
 
+const sentRequest = (data: any) => {
+  return apiClient.post('/request/sent', data);
+}
+
 export {
   registerUser,
   loginUser,
@@ -57,4 +61,5 @@ export {
   getUser,
   searchUsers,
   editAvatar,
+  sentRequest
 }

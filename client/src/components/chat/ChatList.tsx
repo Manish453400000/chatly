@@ -1,9 +1,9 @@
 import { Outlet, useNavigate } from 'react-router-dom'
-import io from 'socket.io-client';
 import './Chats.scss'
 
 import { sampleData } from './sampleData'
 import { useState, useEffect } from 'react';
+import Chat from './Chat';
 
 
 //skeleton chatList
@@ -25,14 +25,6 @@ const skChatItems = () => {
 const ChatList = () => { 
   const navigate = useNavigate();
   const [isLoading, setisLoading] = useState(false)
-
-  // useEffect(() => {
-  //   const socket = io('http://localhost:8080', {
-  //     withCredentials: false,
-  //   });
-  //   socket.emit('message', 'hi there')
-  //   console.log(`what socket-io-client is look like: `, socket);
-  // },[])
 
   return (
     <>
@@ -113,7 +105,7 @@ const ChatList = () => {
           <span>End-to-end encrypted</span>
         </span>
       </div>
-      <div className="absolute w-full h-full z-[1]">
+      <div className="absolute w-full h-full z-[1] test">
         <Outlet />
       </div>
     </div>

@@ -19,8 +19,8 @@ export const requestHandler = async (
   }catch(error: any) {
     localStorage.clear();
     console.log(error);
-    if(isBrowser) window.location.href = "/app/auth/sign-in";
-    onError(error?.response?.data?.message || "Somthing went wrong while handling request");
+    // if(isBrowser) window.location.href = "/app/auth/sign-in";
+    // onError(error?.response?.data?.message || "Somthing went wrong while handling request");
   }finally {
     setLoading && setLoading(false);
   }

@@ -21,6 +21,8 @@ const Chat = () => {
   useEffect(() => {
     if (id) {
       const user = sampleData.find(user => user.id === id);
+      console.log(user);
+      
       setUserData(user);
     }
   },[id])

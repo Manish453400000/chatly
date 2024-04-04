@@ -53,7 +53,8 @@ const SignUp = () => {
   const handelSignUp = async (e:React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if(username.trim().length <= 6 || password.trim().length <= 6) {
-      alert("please enter valid username and password")
+      // alert("please enter valid username and password")
+      console.log(data);
       return
     }
     await requestHandler(

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { debouncer } from '../../utils'
-import { searchUsers } from '../../api/api'
+import { searchUsers, sentRequest } from '../../api/api'
 import { requestHandler } from '../../utils'
 
 //skeleton chatList
@@ -32,6 +32,7 @@ interface User {
 
 const SearchList = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const [isRequestLoading, setIsRequestLoading] = useState(false);
   const [isDataEmpty, setIsDataEmpty] = useState(true);
   const [defaultMessage, setDefaultMessage] = useState("Search your friends and secrete crush  by their username...")
   const [data, setData] = useState<User[]>([
@@ -70,6 +71,22 @@ const SearchList = () => {
       alert
     )
   }
+
+  const handelSentRequest = async (userId: string) => {
+    if(userId.trim() === "") return;
+    const reqData = {
+      receiverId: userId,
+    }
+    await requestHandler(
+      async () => await sentRequest(reqData),
+      setIsRequestLoading,
+      (Response) => {
+        console.log(Response);
+      },
+      alert
+    )
+  }
+
   const debounceSearch = debouncer(handelSearchQuery, 400);
   const handelInputChange = (event:React.ChangeEvent<HTMLInputElement>) => {
     const query = event.target.value;
@@ -130,7 +147,7 @@ const SearchList = () => {
                     </div>
                     <div className="last-messages whitespace-nowrap text-[12px] text-[#bebdbd] ">{'manish'}</div>
                   </div>
-                  <button className="right px-[10px] text-[16px] rounded-[5px] flex-center py-[4px] bg-spacial text-black cursor-pointer">
+                  <button className="right px-[10px] text-[16px] rounded-[5px] flex-center py-[4px] bg-spacial text-black cursor-pointer" onClick={() => {handelSentRequest(user._id)}}>
                     <i className="fa-solid fa-user-plus"></i>
                   </button>
                 </div>

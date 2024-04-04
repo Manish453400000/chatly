@@ -22,6 +22,7 @@ import Profile from "./components/profile/Profile"
 import Status from "./components/status/Status"
 import Calls from "./components/calls/Calls"
 import SearchList from "./components/search/SearchList"
+import Test from "./components/Test"
 
 function App() {
 
@@ -44,6 +45,7 @@ function App() {
             <Route path="/app/home/requests" element={<SearchList />} />
             <Route path="/app/home/chats" element={<ChatList />} >
               <Route path="/app/home/chats/user/:id" element={<Chat />} />
+              <Route path="/app/home/chats/test/:id" element={<Test />} />
             </Route> 
           </Route>
         </Route>

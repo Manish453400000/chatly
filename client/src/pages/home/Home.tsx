@@ -5,6 +5,8 @@ import { useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { User } from '../../interface/user'
 
+import io from 'socket.io-client';
+
 
 const Home = () => {
   const [showProfile, setShowProfile] = useState(false);
@@ -44,14 +46,18 @@ const Home = () => {
 
   const handelNavigation = (type: string) => {
     setActiveNav(type);
-    navigate(`/app/home/${type}`)
+    navigate(`/app/home/${type}`);
   }
 
   useEffect(() => {
-    const type:string = location?.pathname?.split('/')?.pop() || '';
-    handelNavigation(type)
-    
-  }, [location.pathname])
+    const socket = io('http://localhost:8080', {
+      withCredentials: false,
+    });
+    socket.on('requestReceived', (data) => {
+      console.log(data);
+    })
+    console.log(`what socket-io-client is look like: `, socket);
+  },[])
 
   return (
     <div className='home-container bg-primary overflow-hidden'>

@@ -5,20 +5,24 @@ const chatSchema = new Schema({
     type: String,
     required: true,
   },
-  groupChat: {
+  isGroupChat: {
     type: Boolean,
     default: false,
   },
-  creator: {
+  lastMessage: {
+    type: Types.ObjectId,
+    ref: "Message"
+  },
+  Participants: [
+    {
+      type: Types.ObjectId,
+      ref: "User",
+    }
+  ],
+  admin: {
     type: Types.ObjectId,
     ref: 'User'
   },
-  members: [
-    {
-      type: Types.ObjectId,
-      ref: 'User'
-    },
-  ]
   
 }, {timestamps: true})
 

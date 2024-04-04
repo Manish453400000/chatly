@@ -10,12 +10,9 @@ import { cloudinaryUpload } from '../utils/cloudinary.js';
 const generateTokens = async (userId: Types.ObjectId) => {
   try {
     const user:any = await User.findById(userId);
-    console.log(user)
     
     const accessToken = await user.generateAccessToken(); //err in this part
     const refreshToken = await user.generateRefreshToken();
-
-    console.log(accessToken, refreshToken);
 
     user.refreshToken = refreshToken;
 
@@ -45,7 +42,7 @@ const registerUser = asyncHandler(async (req, res) => {
   })
   const {accessToken, refreshToken} = await generateTokens(user._id)
   if(!accessToken || !refreshToken) {
-    console.log('token error: ', accessToken, refreshToken)
+    throw new ApiError(500, "Failed to generate tokens")
   }
   const createdUser = await User.findById(user._id).select("-password -refreshToken");
   const options = {
@@ -133,7 +130,6 @@ const logoutUser = asyncHandler(async (req, res) => {
 
 const uploadAvatar = asyncHandler(async (req, res) => {
   const { user } = req.body;
-  console.log(user)
 
   const avatarOnLocalPath = req.file?.path;
   if(!avatarOnLocalPath){
@@ -141,7 +137,6 @@ const uploadAvatar = asyncHandler(async (req, res) => {
   }
   
   const avatar:any = await cloudinaryUpload(avatarOnLocalPath);
-  console.log(avatar);
   if(!avatar.url) {
     throw new ApiError(500, "somthing went wrong while uploading avatar")
   }

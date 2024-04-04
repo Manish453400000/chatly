@@ -1,4 +1,4 @@
-import { Schema, model, mongo } from "mongoose";
+import { Schema, model, Types } from "mongoose";
 import bcrypt from "bcryptjs";
 import jwt from 'jsonwebtoken';
 
@@ -39,6 +39,15 @@ const userSchema = new Schema({
     unique: true,
     lowercase: true,
     trim: true,
+  },
+  friends: {
+    type: [
+      {
+        type: Types.ObjectId,
+        ref: 'User',
+      },
+    ],
+    default: []
   },
   role: {
     type: String,
