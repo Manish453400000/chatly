@@ -192,13 +192,13 @@ const acceptRequest = asyncHandler(async (req, res) => {
   io.to(request.senderId).emit('requestAccepted', receiver)
   io.to(request.receiverId).emit('requestAccepted', sender);
 
-  const dreq = await Request.findOneAndDelete({_id: requestId})
+  await Request.findOneAndDelete({_id: requestId})
 
   return res.status(200)
   .json(
     new ApiResponse(
       200,
-      {dreq},
+      {},
       "Request accepted",
       true
     )
@@ -207,7 +207,7 @@ const acceptRequest = asyncHandler(async (req, res) => {
 })
 
 const rejectRequest = asyncHandler(async (req, res) => {
-  const requestId = req.params.requestId;
+  const requestId = req.query.requestId;
 
   await Request.findOneAndDelete({_id: requestId});
   res
