@@ -47,11 +47,25 @@ const editAvatar = async (data:any) => {
 }
 
 const searchUsers = (query:string) => {
-  return apiClient.get(`/request/search?searchQuery=${query}`);
+  return apiClient.get(`friend/search?searchQuery=${query}`);
 }
 
 const sentRequest = (data: any) => {
-  return apiClient.post('/request/sent', data);
+  return apiClient.post('friend/request/sent', data);
+}
+
+const acceptRequest = async (requestId: string) => {
+  return await apiClient.get(`friend/request/accept?requestId=${requestId}`)
+}
+const rejectRequest = async (requestId: string) => {
+  return await apiClient.get(`friend/request/reject?requestId=${requestId}`)
+}
+const getAllFriends = async () => {
+  return await apiClient.get(`friend/get-friends`)
+}
+
+const getAllNotifications = () => {
+  return apiClient.get('friend/request/get-requests');
 }
 
 export {
@@ -61,5 +75,9 @@ export {
   getUser,
   searchUsers,
   editAvatar,
-  sentRequest
+  sentRequest,
+  getAllNotifications,
+  acceptRequest,
+  rejectRequest,
+  getAllFriends
 }

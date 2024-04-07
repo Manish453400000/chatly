@@ -5,21 +5,19 @@ import { useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { User } from '../../interface/user'
 
-import io from 'socket.io-client';
+import { socket } from '../../socket/socket'
 
 
 const Home = () => {
   const [showProfile, setShowProfile] = useState(false);
   const profileContainer = useRef<HTMLDivElement>(null);
 
-  const location = useLocation();
-
   const navigate = useNavigate();
 
   const selectUser = (state:any) => state.user
   const data:any = useSelector(selectUser)
 
-  const [user, setUser] = useState<User>({
+  const [userData, setUserData] = useState<User>({
     avatar: {
     localPath: "",
     url: "",
@@ -27,6 +25,9 @@ const Home = () => {
     },
     createdAt: "",
     email: "",
+    about: "...",
+    friends: [],
+    requests: [],
     isEmailVerified: false,
     role: "",
     updatedAt: "",
@@ -38,9 +39,17 @@ const Home = () => {
   useEffect(() => {
     if(data.isAuthenticated){
       const { user } = data.data;
-      setUser(user);
+      setUserData(user);
+
+      //io connection
+      
+      socket.emit('login', userData.username)
+      console.log(`what socket-io-client is look like: `, socket);
+      return () => {
+        socket.disconnect();
+      }
     }
-  },[data])
+  },[data.isAuthenticated])
 
   const [activeNav, setActiveNav]= useState('chats');
 
@@ -48,16 +57,6 @@ const Home = () => {
     setActiveNav(type);
     navigate(`/app/home/${type}`);
   }
-
-  useEffect(() => {
-    const socket = io('http://localhost:8080', {
-      withCredentials: false,
-    });
-    socket.on('requestReceived', (data) => {
-      console.log(data);
-    })
-    console.log(`what socket-io-client is look like: `, socket);
-  },[])
 
   return (
     <div className='home-container bg-primary overflow-hidden'>
@@ -71,7 +70,7 @@ const Home = () => {
           <span className={`${activeNav == 'status' ? 'active':''} nav-btns cursor-pointer`}><i className='bx bx-star' ></i></span>
           <span className={`${activeNav == 'setting' ? 'active':''} nav-btns cursor-pointer`} onClick={() => setShowProfile(prev => !prev)}><i className='bx bx-cog' ></i></span>
           <div className=' rounded-full w-[25px] aspect-square' onClick={() => setShowProfile(prev => !prev)}>
-            <img src={user.avatar.url} alt="profile" />
+            <img src={userData.avatar.url} alt="profile" />
           </div>
         </div>
       </div>

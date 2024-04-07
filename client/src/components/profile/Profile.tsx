@@ -74,8 +74,8 @@ const ProfileSetting = () => {
   return (
     <div className='h-full px-[15px] py-[10px] overflow-auto flex flex-col'>
       <div className='flex justify-between'>
-        <div className="avatar-profile w-[6rem] rounded-full relative  overflow-visible">
-          <img src={ userDetails?.avatar?.url} className=' overflow-hidden rounded-[50%]' alt="" />
+        <div className="avatar-profile w-[5rem] rounded-full relative  overflow-visible aspect-square">
+          <img src={ userDetails?.avatar?.url} className=' object-cover overflow-hidden rounded-[50%] w-full aspect-square' alt="" />
           <label htmlFor="fileInput">
             <div className="pen bg-white rounded-full flex-center text-[20px] absolute bottom-0 right-0 z-30 p-[5px] text-black cursor-pointer ">
                 <i className='bx bx-pencil'></i>
@@ -106,7 +106,7 @@ const ProfileSetting = () => {
       <div className="about flex justify-between items-center py-[10px] text-[18px]">
         <span className='text-[14px] flex flex-col '>
           <span>About</span>
-          <span className='text-[gray]'>....</span>
+          <p className='text-[gray] text-[13px]'>{userDetails?.about || "..."}</p>
         </span>
         <i className='bx bx-pencil p-[6px] flex-center hover:bg-[#80808039] rounded-[5px] cursor-pointer'></i>
       </div>
