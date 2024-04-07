@@ -63,7 +63,7 @@ const loginUser = asyncHandler(async (req, res) => {
   if(!username || !password) {
     throw new ApiError(403, "username or password is required")
   }
-
+  
   const user:any = await User.findOne({username})
   if(!user) {
     throw new ApiError(400, "User not found")

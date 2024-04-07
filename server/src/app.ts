@@ -4,6 +4,13 @@ import { Server } from 'socket.io';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 
+import jwt from 'jsonwebtoken';
+import cookie from 'cookie';
+import { ApiError } from './utils/apiError';
+import { User } from './models/user.model';
+
+const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET || "";
+
 const app = express();
 const server = createServer(app);
 const io = new Server(server, {
@@ -27,18 +34,55 @@ app.use(express.urlencoded({extended: true, limit: "16kb"}));
 app.use(express.static("public"));
 app.use(cookieParser());
 
-// io.on("connection", (socket) => {
-//   console.log(`what is socket: `, socket);
-//   socket.on("message", (data) => console.log("data: ", data) )
-  
-// })
+
+io.on('connection', async (socket:any) => {
+    try {
+      const cookies = cookie.parse(socket.handshake.headers?.cookie || "");
+
+      let token = cookies?.accessToken;
+      if(!token) {
+        token = socket.handshake.auth?.token;
+      }
+
+      if(!token) {
+        throw new ApiError(401, "UnAuthorized handshake. Token is missing.");
+      }
+
+      const decodedToken:any = jwt.verify(token, accessTokenSecret)
+
+      const user = await User.findById(decodedToken?._id || '').select(
+        "-password -refreshToken "
+      )
+
+      if(!user) {
+        throw new ApiError(401, "unAuthorized handshake. Token is invalid");
+      }
+
+      socket.user = user;
+
+      socket.join(user._id.toString());
+      socket.emit('connect');
+      console.log("User connected 🗼. userId: " + user?._id.toString() + "sId: " + socket.id);
+      
+      socket.on('disconnect', () => {
+        console.log("user has disconnected 🚫. userId: " + socket.user?._id);
+        if(socket.user?._id){
+          socket.leave(socket.user?._id);
+        }
+      })
+
+    }catch(error:any) {
+      socket.emit('socketError', error?.message || "Something went wrong while connecting to the socket");
+    }
+  })
+
 
 import { userRouter } from './routers/user.routes';
 import { requestRouter } from './routers/request.routes';
 import { chatRouter } from './routers/chat.routes';
 
 app.use("/api/v1/user", userRouter)
-app.use("/api/v1/request", requestRouter)
+app.use("/api/v1/friend", requestRouter)
 app.use("/api/v1/chats", chatRouter)
 
 app.get('/', (req, res) => {

@@ -6,12 +6,12 @@ const requestSchema = new Schema({
     default: "pending",
     enum: ["pending", "accepted", "rejected"],
   },
-  sender: {
+  senderId: {
     type: Types.ObjectId,
     ref: 'User',
     required: true
   },
-  receiver: {
+  receiverId: {
     type: Types.ObjectId,
     ref: 'User',
     required: true
