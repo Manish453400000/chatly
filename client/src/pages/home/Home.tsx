@@ -42,7 +42,7 @@ const Home = () => {
       setUserData(user);
 
       //io connection
-      
+      socket.connect();
       socket.emit('login', userData.username)
       console.log(`what socket-io-client is look like: `, socket);
       return () => {

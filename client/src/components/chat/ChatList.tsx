@@ -1,9 +1,10 @@
 import { Outlet, useNavigate } from 'react-router-dom'
 import './Chats.scss'
 
-import { sampleData } from './sampleData'
 import { useState, useEffect } from 'react';
-import Chat from './Chat';
+import { useSelector, useDispatch } from 'react-redux';
+import { addAllFriends, addFriend } from '../../app/features/friendSlice';
+
 import { requestHandler } from '../../utils';
 import { getAllFriends } from '../../api/api';
 
@@ -38,25 +39,39 @@ interface Friend {
 }
 
 const ChatList = () => { 
+
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const [isLoading, setisLoading] = useState(false)
-  const [friends, setFriends] = useState<Friend[]>([])
+
+  const selectFriends = (state:any) => state.friends
+  const friends:Friend[] = useSelector(selectFriends)
+
 
   useEffect(() => {
+    console.log('mounted');
+    
     socket.on('requestAccepted', (data: Friend) => {
       console.log(data);
-      setFriends(prevState => [...prevState, data])
+      dispatch(addFriend(data));
     });
     (async() => {
       await requestHandler(
         async () => getAllFriends(),
         setisLoading,
         (res) => {
-          setFriends(res.data)
+          const payload = {
+            friends: res.data
+          }
+          dispatch(addAllFriends(payload))
         },
         alert
       )
     })()
+    return () => {
+      console.log('unmounted');
+    }
   },[])
   
   return (

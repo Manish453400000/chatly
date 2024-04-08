@@ -3,7 +3,18 @@ import './Chats.scss'
 
 import { sampleData } from './sampleData'
 import { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux';
 
+interface Friend {
+  avatar: {
+    localPath: string;
+    url: string,
+    _id: string,
+  },
+  username: string,
+  about: string,
+  _id: string,
+}
 interface User {
     id: string,
     logo: string,
@@ -14,22 +25,19 @@ interface User {
 }
 const Chat = () => {
   const { id } = useParams()
-  const [userData, setUserData] = useState<User | undefined>(undefined)
+  const [friendData, setFriendData] = useState<Friend | undefined>(undefined)
+
+  const selectFriends = (state:any) => state.friends;
+  const friends:Friend[] = useSelector(selectFriends);
 
   const navigate = useNavigate();
 
   useEffect(() => {
     if (id) {
-      const user = sampleData.find(user => user.id === id);
-      console.log(user);
-      
-      setUserData(user);
+      const friend:Friend | undefined = friends.find(friend => friend._id === id);
+      setFriendData(friend)
     }
   },[id])
-
-  useEffect(() =>{
-    console.log({user:userData});
-  },[userData, setUserData])
   
   return (
     <div className="chat-box-container bg-primary flex flex-col ">
@@ -37,11 +45,11 @@ const Chat = () => {
         <div className="left flex items-center gap-[5px]">
           <span className='flex-center mr-[5px] cursor-pointer' onClick={() => navigate('/app/home/chats')}><i className='bx bxs-left-arrow-alt'></i></span>
           <div className='logo w-[36px] h-[36px] rounded-full object-cover object-center'>
-            <img src={userData?.logo} alt={userData?.name} />
+            <img src={friendData?.avatar.url} alt={'avatar'} className='w-full h-full object-cover ' />
           </div>
           <div className="name text-[16px] font-semibold leading-4">
-            <div className='overflow-hidden'>{userData?.name}</div>
-            <div className='text-[12px] text-[gray]'>{userData?.lastSeen}</div>
+            <div className='overflow-hidden'>{friendData?.username}</div>
+            <div className='text-[12px] text-[gray]'>{friendData?.about}</div>
           </div>
         </div>
         <div className="right flex items-center text-[20px] gap-[5px]">

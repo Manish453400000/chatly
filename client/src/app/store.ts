@@ -1,10 +1,23 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import userReducer from "./features/userSlice";
-import { initialState } from "./features/userSlice";
+import friendReducer from "./features/friendSlice";
+
+const rootReducer = combineReducers({
+  user: userReducer,
+  friends: friendReducer,
+})
+
+const friend: any[] = []
+
+export const initialState = {
+  user: {
+    isAuthenticated: false,
+    data: {}
+  },
+  friends: friend
+}
 
 export const store = configureStore({
-  reducer: userReducer,
-  preloadedState: {
-    user: initialState.user,
-  }
+  reducer: rootReducer,
+  preloadedState: initialState,
 })
