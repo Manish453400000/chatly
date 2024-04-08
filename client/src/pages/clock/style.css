@@ -1,0 +1,22 @@
+.hour-circle {
+  background: #71933d3b;
+  backdrop-filter: blur(5px);
+}
+
+.minute-circle {
+  background: #484848;
+  backdrop-filter: blur(5px);
+}
+.locker {
+  transition: right 0.5s;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+.correct {
+  border: 0.5px solid #99ff00;
+  box-shadow: 0 0 5px #99ff00;
+}
+.wrong {
+  border: 0.5px solid #848484;
+}
