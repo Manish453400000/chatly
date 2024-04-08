@@ -15,7 +15,7 @@ export const userSlice = createSlice({
         isAuthenticated: action.payload.isAuthenticated,
         data: action.payload.data
       }
-      state = user;
+      return user
     },
     updateUser: () => {},
     removeUser: (state:any, _action) => {
