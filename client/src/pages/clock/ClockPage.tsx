@@ -50,15 +50,15 @@ const ClockPage = () => {
 
   return (
     <div className="maincontainer flex justify-center items-center flex-col min-h-[100vh] bg-secondary text-white">
-      <div className=' relative w-[23.5rem] pl-[10px] py-[10px]'>
+      <div className=' relative w-[21.5rem] h-[22.3rem] px-[10px] py-[10px]'>
         <Clock time={time} onClickE={handelLockClick} data={password} />
-        <div className={`locker ${showLocker ? "right-[0%]": "right-[7rem]"} w-[3rem] h-[1.6rem] bg-[#363535] absolute top-[50%] translate-y-[-50%] z-[0] flex justify-end pl-[12px] items-center ${password.length < 4 ? 'wrong': 'correct'}`}>
+        <div className={`locker ${showLocker ? "bottom-[0%]": "bottom-[7rem]"} w-[3rem] h-[4rem] bg-[#363535] absolute left-[50%] translate-x-[-50%] z-[0] flex flex-col justify-end items-end ${password.length < 4 ? 'wrong': 'correct'}`}>
           <input 
           type="text" 
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           placeholder='xxxx'
-          className='w-[100%] h-[100%] border-none outline-none bg-[transparent] overflow-hidden text-[12px] pb-[1px]'
+          className='w-[100%]  outline-none bg-[transparent] overflow-hidden text-[12px] pb-[1px] text-center'
           ref={locker}
           />
         </div>
