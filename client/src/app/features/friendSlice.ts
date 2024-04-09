@@ -1,7 +1,19 @@
 import { createSlice } from "@reduxjs/toolkit";
 // import { initialState } from "../store";
 
-export const initialState:any[] = []
+interface Friend {
+  avatar: {
+    localPath: string;
+    url: string,
+    _id: string,
+  },
+  isOnline: boolean,
+  username: string,
+  about: string,
+  _id: string,
+}
+
+export const initialState:Friend[] = []
 
 export const friendSlice = createSlice({
   name: 'friends',
@@ -15,11 +27,20 @@ export const friendSlice = createSlice({
       const friend = action.payload.friend;
       state.push(friend);
     },
+    updateOnlineState: (state, action) => {
+      const id = action.payload.id;
+      const status = action.payload.status;
+      state.filter(friend => {
+        if (friend._id === id) {
+          friend.isOnline = status
+        }
+      })
+    },
     removeFriend: (state, action) => {
        state.filter((request:any) => request.id !== action.payload)
     }
   }
 })
 
-export const { addAllFriends, addFriend, removeFriend } = friendSlice.actions;
+export const { addAllFriends, addFriend, removeFriend, updateOnlineState } = friendSlice.actions;
 export default friendSlice.reducer;

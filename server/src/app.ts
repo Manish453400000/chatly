@@ -34,6 +34,7 @@ app.use(express.urlencoded({extended: true, limit: "16kb"}));
 app.use(express.static("public"));
 app.use(cookieParser());
 
+let onlineUsers = []
 
 io.on('connection', async (socket:any) => {
     try {
@@ -43,30 +44,31 @@ io.on('connection', async (socket:any) => {
       if(!token) {
         token = socket.handshake.auth?.token;
       }
-
       if(!token) {
         throw new ApiError(401, "UnAuthorized handshake. Token is missing.");
       }
 
       const decodedToken:any = jwt.verify(token, accessTokenSecret)
 
-      const user = await User.findById(decodedToken?._id || '').select(
+      const user = await User.findById( decodedToken?._id || '').select(
         "-password -refreshToken "
       )
-
       if(!user) {
         throw new ApiError(401, "unAuthorized handshake. Token is invalid");
       }
-
-      socket.user = user;
-
-      socket.join(user._id.toString());
-      socket.emit('connect');
-      console.log("User connected 🗼. userId: " + user?._id.toString() + "sId: " + socket.id);
       
-      socket.on('disconnect', () => {
+      socket.user = user;
+      socket.join(user._id.toString());
+      console.log("User connected 🗼. userId: " + user?._id.toString() + " sId: " + socket.id);
+
+      updateOnlineStatus(socket, true)
+      
+      socket.on('disconnect', async () => {
         console.log("user has disconnected 🚫. userId: " + socket.user?._id);
         if(socket.user?._id){
+          const id = socket.user?._id;
+          updateOnlineStatus(socket, false)
+
           socket.leave(socket.user?._id);
         }
       })
@@ -80,6 +82,8 @@ io.on('connection', async (socket:any) => {
 import { userRouter } from './routers/user.routes';
 import { requestRouter } from './routers/request.routes';
 import { chatRouter } from './routers/chat.routes';
+import { updateOnlineStatus } from './socket';
+import { log } from 'console';
 
 app.use("/api/v1/user", userRouter)
 app.use("/api/v1/friend", requestRouter)
@@ -89,4 +93,4 @@ app.get('/', (req, res) => {
   res.send('hello world')
 })
 
-export { server }
+export { server, io }

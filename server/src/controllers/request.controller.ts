@@ -182,12 +182,12 @@ const acceptRequest = asyncHandler(async (req, res) => {
     {_id: request.receiverId},
     {$push: {friends: request.senderId}},
     {new: true}
-  ).select("username, avatar, about, _id")
+  ).select("username, avatar, isOnline, about, _id")
   const sender = await User.updateOne(
     {_id: request.senderId},
     {$push: {friends: request.receiverId}},
     {new: true}
-  ).select("username, avatar, about, _id")
+  ).select("username, avatar, isOnline, about, _id")
 
   io.to(request.senderId).emit('requestAccepted', receiver)
   io.to(request.receiverId).emit('requestAccepted', sender);
@@ -245,6 +245,7 @@ const getAllFriends = asyncHandler(async (req, res) => {
       $project: {
         username: 1,
         avatar: 1,
+        isOnline: 1,
         about: 1,
         _id: 1
       }

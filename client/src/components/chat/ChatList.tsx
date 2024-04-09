@@ -3,7 +3,7 @@ import './Chats.scss'
 
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { addAllFriends, addFriend } from '../../app/features/friendSlice';
+import { addAllFriends, addFriend, updateOnlineState } from '../../app/features/friendSlice';
 
 import { requestHandler } from '../../utils';
 import { getAllFriends } from '../../api/api';
@@ -33,6 +33,7 @@ interface Friend {
     url: string,
     _id: string,
   },
+  isOnline: boolean,
   username: string,
   about: string,
   _id: string,
@@ -49,11 +50,14 @@ const ChatList = () => {
   const friends:Friend[] = useSelector(selectFriends)
 
 
-  useEffect(() => {
-    console.log('mounted');
+  useEffect(() => { 
     
-    socket.on('requestAccepted', (data: Friend) => {
+    socket.on('onlineStatus', (data:{id: string, status: Boolean}) => {
       console.log(data);
+      dispatch(updateOnlineState(data))
+    })
+
+    socket.on('requestAccepted', (data: Friend) => {
       dispatch(addFriend(data));
     });
     (async() => {
@@ -70,7 +74,7 @@ const ChatList = () => {
       )
     })()
     return () => {
-      console.log('unmounted');
+      // console.log('unmounted');
     }
   },[])
   
@@ -127,8 +131,8 @@ const ChatList = () => {
               :
               friends.map((friend) => (
                 <div className='w-full flex-shrink-0 flex items-center gap-[10px] py-[10px] px-[.5rem] hover:bg-[#373737] rounded-[5px] cursor-pointer' key={friend._id} onClick={() => navigate(`/app/home/chats/user/${friend._id}`)}>
-                  <div className="left w-[35px] h-[35px] rounded-full overflow-hidden">
-                    <img src={friend.avatar.url} alt={'avatar'} className='w-full object-cover object-center h-full' loading='lazy' />
+                  <div className={`${friend.isOnline ? 'online': ''} left w-[35px] h-[35px] rounded-full overflow-visible`}>
+                    <img src={friend.avatar.url} alt={'avatar'} className='w-full object-cover object-center h-full rounded-full' loading='lazy' />
                   </div>
                   <div className="right text-[14px] flex-1 ">
                     <div className="name flex justify-between items-center w-full ">

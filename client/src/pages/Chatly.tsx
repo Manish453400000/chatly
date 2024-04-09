@@ -46,7 +46,7 @@ const Chatly = () => {
   }, [])
   
   return (
-    <div>
+    <div className='max-h-[100vh] overflow-hidden bg-secondary'>
       <Outlet />
     </div>
   )

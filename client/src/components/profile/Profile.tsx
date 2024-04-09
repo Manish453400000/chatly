@@ -201,40 +201,40 @@ const Profile = () => {
 
   const [isLoading, setIsLoading] = useState(true);
   return (
-    <div className=' main-profile-box w-full md:max-w-[30rem] absolute bottom-[10px] left-[10px] flex h-[30rem] rounded-[5px]'>
-      <div className="options justify-between">
-        <div className="top ">
+    <div className=' main-profile-box w-full md:max-w-[30rem] absolute bottom-[2px] left-[10px] flex h-[26rem] md:h-[30rem] rounded-[5px] pr-[2px] '>
+      <div className="options justify-between ">
+        <div className="top  ">
           <ul>
-            <li className={`${activeOption == 'general' ? "active":"non-active"} `} onClick={() => handelOptionLink('general')}>
-              <i className='bx bx-laptop'></i>
-              <span>General</span>
+            <li className={`${activeOption == 'general' ? "active":"non-active "} `} onClick={() => handelOptionLink('general')}>
+              <i className='bx bx-laptop '></i>
+              <span className='md:block hidden'>General</span>
             </li>
             <li className={`${activeOption == 'account' ? "active":"non-active"}`} onClick={() => handelOptionLink('account')}>
               <i className='bx bxs-key'></i>
-              <span>Account</span>
+              <span className='md:block hidden'>Account</span>
             </li>
             <li className={`${activeOption == 'chats' ? "active":"non-active"}`} onClick={() => handelOptionLink('chats')}>
               <i className='bx bx-chat '></i>
-              <span>Chats</span>
+              <span className='md:block hidden'>Chats</span>
             </li>
             <li className={`${activeOption == 'notification' ? "active":"non-active"}`} onClick={() => handelOptionLink('notification')}>
               <i className='bx bx-bell non-active'></i>
-              <span>Notification</span>
+              <span className='md:block hidden'>Notification</span>
             </li>
             <li className={`${activeOption == 'storage' ? "active":"non-active"}`} onClick={() => handelOptionLink('storage')}>
               <i className='bx bx-server non-active'></i>
-              <span>Storage</span>
+              <span className='md:block hidden'>Storage</span>
             </li>
             <li className={`${activeOption == 'help' ? "active":"non-active"}`} onClick={() => handelOptionLink('help')}>
               <i className='bx bx-info-circle non-active'></i>
-              <span>Help</span>
+              <span className='md:block hidden'>Help</span>
             </li>
           </ul>
         </div>
         <div className="bottom">
           <span className={`prof ${activeOption == 'profile' ? "active":"non-active"}`} onClick={() => handelOptionLink('profile')} >
             <i className='bx bx-user-circle'></i>
-            <span>Profile</span>
+            <span className='md:block hidden'>Profile</span>
           </span>
         </div>
       </div>

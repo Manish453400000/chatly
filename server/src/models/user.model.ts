@@ -64,6 +64,10 @@ const userSchema = new Schema({
     type: String,
     required: [true, "password is required"],
   },
+  isOnline: {
+    type: Boolean,
+    default: false,
+  },
   isEmailVerified: {
     type: Boolean,
     default: false,

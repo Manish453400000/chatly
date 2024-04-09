@@ -29,7 +29,7 @@ const Clock:React.FC<{time:Time, onClickE:any, data: string}> = ({time, onClickE
   },[data])
 
   return (
-    <div className=' relative w-[20rem] h-[20rem] overflow-hidden z-[1]'>
+    <div className=' rounded-full clock-container relative sm:w-[20rem] sm:h-[20rem] w-[18rem] h-[18rem] overflow-hidden z-[1]'>
       <div className={` minute-circle w-[20rem] h-[20rem] aspect-square  absolute rounded-full flex justify-center items-center`} ref={minuteHand}>
         <div className="relative w-full h-full ">
           <div className="hand w-[4px] bg-white h-[52%] absolute bottom-[42%] left-[50%] translate-x-[-50%] rounded-[4px]"></div>

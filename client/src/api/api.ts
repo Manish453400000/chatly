@@ -4,10 +4,16 @@ import { LocalStorage } from "../utils";
 import { AxiosResponse } from "axios";
 import { ApiSuccessResponseInterface } from "../interface/api";
 
+const token = LocalStorage.get("token");
+
 const apiClient = axios.create({
   baseURL: import.meta.env.VITE_SERVER_URI,
   withCredentials: true,
   timeout: 120000,
+  headers: {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${token}`
+  }
 })
 
 apiClient.interceptors.request.use(

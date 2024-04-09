@@ -11,9 +11,9 @@ const Auth = () => {
   }, [isExistingUser, setIsExistingUser])
 
   return (
-    <div className='w-screen min-h-[100vh] bg-primary text-white overflow-hidden'>
+    <div className='w-screen flex justify-center min-h-[100vh] bg-primary text-white overflow-hidden'>
       <div className="left"></div>
-      <div className="right flex-center h-[100vh]">
+      <div className="right flex-center h-[100vh] w-[90%] ">
         <Outlet />
       </div>
     </div>

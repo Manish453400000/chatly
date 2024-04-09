@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import './style.css'
 import Clock from './clock/Clock'
 import { useNavigate } from 'react-router-dom'
@@ -12,6 +12,8 @@ const ClockPage = () => {
   const [password, setPassword] = useState('');
 
   const navigate = useNavigate();
+  
+  const locker = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -25,17 +27,30 @@ const ClockPage = () => {
     return () => clearInterval(intervalId);
   }, [])
 
+  useEffect(() => {
+    if(!locker.current) return;
+    const handleKeyPress = (e: KeyboardEvent | any) => {
+      if(e.keyCode === 13 || e.key === 'enter') {
+        const password = e.target?.value;
+        if(password !== '1234') setPassword('')
+        if(password === '1234') navigate('/app/auth/sign-in')
+      }
+    }
+    locker.current?.addEventListener('keypress', handleKeyPress)
+
+    return () => locker.current?.removeEventListener('keypress', handleKeyPress)
+  },[])
+
   const handelLockClick = () => {
-    console.log('clicked');
     setShowLocker(prevState => !prevState)
     if(password.length < 4) return;
     if(password !== '1234') setPassword('')
     if(password === '1234') navigate('/app/auth/sign-in')
   }
-  
+
   return (
     <div className="maincontainer flex justify-center items-center flex-col min-h-[100vh] bg-secondary text-white">
-      <div className=' relative w-[22.5rem]'>
+      <div className=' relative w-[23.5rem] pl-[10px] py-[10px]'>
         <Clock time={time} onClickE={handelLockClick} data={password} />
         <div className={`locker ${showLocker ? "right-[0%]": "right-[7rem]"} w-[3rem] h-[1.6rem] bg-[#363535] absolute top-[50%] translate-y-[-50%] z-[0] flex justify-end pl-[12px] items-center ${password.length < 4 ? 'wrong': 'correct'}`}>
           <input 
@@ -44,6 +59,7 @@ const ClockPage = () => {
           onChange={(e) => setPassword(e.target.value)}
           placeholder='xxxx'
           className='w-[100%] h-[100%] border-none outline-none bg-[transparent] overflow-hidden text-[12px] pb-[1px]'
+          ref={locker}
           />
         </div>
       </div>
