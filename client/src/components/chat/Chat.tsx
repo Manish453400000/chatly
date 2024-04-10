@@ -1,43 +1,90 @@
 import { useNavigate, useParams } from 'react-router-dom'
 import './Chats.scss'
 
-import { sampleData } from './sampleData'
 import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux';
 
-interface Friend {
-  avatar: {
-    localPath: string;
-    url: string,
-    _id: string,
-  },
-  username: string,
-  about: string,
-  _id: string,
-}
-interface User {
-    id: string,
-    logo: string,
-    name: string,
-    lastSeen: string,
-    lastMessage: string,
-    messageStatus: string
-}
+import { Friend } from '../../interface/user';
+import { requestHandler } from '../../utils';
+import { getAllMessages, sentMessages } from '../../api/api';
+import { socket } from '../../socket/socket';
+
+
 const Chat = () => {
   const { id } = useParams()
   const [friendData, setFriendData] = useState<Friend | undefined>(undefined)
+
+  const [messageInput, setMessageInput] = useState('')
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [isMessageSent, setIsMessageSent] = useState(false);
+
+  const [messages, setMessages] = useState<any[]>([])
+  const [showSendButton, setShowSendButton] = useState(false);
 
   const selectFriends = (state:any) => state.friends;
   const friends:Friend[] = useSelector(selectFriends);
 
   const navigate = useNavigate();
 
+  
+  const getMessages = async (chatId:string) => {
+    try{
+      await requestHandler(
+        async () => await getAllMessages(chatId),
+        setIsLoading,
+        (res) => {
+          console.log(res);
+        },
+        alert
+      )
+    }catch(error){
+      console.log(error);
+    }
+  }
+
+  useEffect(() => {
+    if(messageInput.trim().length > 0){
+      setShowSendButton(true);
+    }else{
+      setShowSendButton(false);
+    }
+  }, [messageInput])
+
+  useEffect(() => {
+    if(!friendData) return;
+    console.log(!friendData);
+    getMessages(friendData?.chatId)
+
+  }, [friendData])
+  
+  useEffect(() => {
+    socket.on('messageReceived', (message:any) => {
+      setMessages((prevMessages) => [...prevMessages, message]);
+    })
+  },[])
+
+
   useEffect(() => {
     if (id) {
       const friend:Friend | undefined = friends.find(friend => friend._id === id);
       setFriendData(friend)
     }
+    
   },[id])
+
+  const handelSentMessage = async() => {
+    console.log(messageInput);
+    await requestHandler(
+      async () => await sentMessages(messageInput, friendData?.chatId),
+      setIsMessageSent,
+      (res) => {
+        console.log(res);
+        setMessages(res.data)
+      },
+      alert
+    )
+  }
   
   return (
     <div className="chat-box-container bg-primary flex flex-col ">
@@ -70,8 +117,21 @@ const Chat = () => {
       <div className="chat-box-footer w-full h-[4rem] px-[.5rem] bg-secondary flex gap-[8px] items-center text-[20px]">
         <span><i className='bx bx-smile p-[8px] flex-center hover:bg-[#5a57577b] rounded-[5px]'></i></span>
         <span><i className="fa-solid fa-paperclip text-[16px]"></i></span>
-        <input type="text" placeholder='Type a message' className='text-[14px] bg-transparent px-[5px] py-[5px] flex-1 border-none outline-none' />
-        <span><i className='bx bx-microphone p-[8px] flex-center hover:bg-[#5a57577b] rounded-[5px]' ></i></span>
+        <input 
+        type="text" 
+        placeholder='Type a message' 
+        className='text-[14px] bg-transparent px-[5px] py-[5px] flex-1 border-none outline-none'
+        value={messageInput}
+        onChange={(e) => setMessageInput(e.target.value)}
+        />
+        <span className='p-[8px] flex-center hover:bg-[#5a57577b] bg-[#4643437b] rounded-[5px] mr-[10px] cursor-pointer' onClick={handelSentMessage}>
+          {
+            showSendButton?
+            <i className="fa-solid m-[6px] fa-paper-plane text-[#44e044] text-[16px]"></i>
+            :
+            <i className='bx bx-microphone ' ></i>
+          }
+          </span>
       </div>
 
     </div>

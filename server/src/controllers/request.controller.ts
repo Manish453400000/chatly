@@ -5,6 +5,9 @@ import { ApiError } from "../utils/apiError";
 import { ApiResponse } from "../utils/apiResponse";
 import { asyncHandler } from "../utils/asyncHandler";
 import { Types } from "mongoose";
+import { Chat } from "../models/chat.model";
+import { response } from "express";
+import { pipeline } from "stream";
 
 
 const searchUsers = asyncHandler(async (req, res) => {
@@ -123,7 +126,6 @@ const getAllRequest = asyncHandler(async (req, res) => {
           {
             $match: {
               $expr: { $eq: ["$_id", "$$senderId"]}
-              // username: {$regex: /manish9062/i}
             }
           }
         ],
@@ -171,12 +173,13 @@ const acceptRequest = asyncHandler(async (req, res) => {
   const io = req.app.get('io');
   const requestId = req.query.requestId;
 
-  // res.json({requestId})
-
-  const request:any = await Request.findById(requestId);
-  // if(!request){
-  //   throw new ApiError(400, "Request not found")
-  // }
+  const request = await Request.findById(requestId);
+  if(!request){
+    throw new ApiError(400, "Request not found")
+  }
+  if(request.senderId === request.receiverId){
+    throw new ApiError(400, "you can't chat with yourself");
+  }
 
   const receiver = await User.updateOne(
     {_id: request.receiverId},
@@ -188,6 +191,45 @@ const acceptRequest = asyncHandler(async (req, res) => {
     {$push: {friends: request.receiverId}},
     {new: true}
   ).select("username, avatar, isOnline, about, _id")
+
+  const chat = await Chat.aggregate([
+    {
+      $match: {
+        isGroupChat: false,
+        $and: [
+          {
+            participants: {
+              $elemMatch: {
+                $eq: request.receiverId,
+              }
+            }
+          },
+          {
+            participants: {
+              $elemMatch: {
+                $eq: request.senderId,
+              }
+            }
+          }
+        ]
+      }
+    }
+  ])
+
+  if(!chat.length) {
+    const participants = [request.senderId, request.receiverId]
+    const newChatInstance = await Chat.create({
+      name: 'One on one chat',
+      Participants: participants,
+      admin: request.senderId,
+    })
+    if(!newChatInstance) {
+      throw new ApiError(500, "Something went wrong when creating chat instance")
+    }
+    console.log(participants);
+    console.log("newChat: " + newChatInstance);
+  }
+  console.log(chat);
 
   io.to(request.senderId).emit('requestAccepted', receiver)
   io.to(request.receiverId).emit('requestAccepted', sender);
@@ -242,12 +284,37 @@ const getAllFriends = asyncHandler(async (req, res) => {
       }
     },
     {
+      $lookup: {
+        from: "chats",
+        let: {friendId : "$_id"},
+        pipeline: [
+          {
+            $match: {
+              $expr: {
+                $and: [
+                  {$in: ["$$friendId", "$Participants"]},
+                  {$in: [req.body.user._id, "$Participants"]}
+                ]
+              }
+            }
+          },
+          {
+            $project: {
+              _id: 1,
+            }
+          }
+        ],
+        as: "chatId"
+      }
+    },
+    {
       $project: {
         username: 1,
         avatar: 1,
         isOnline: 1,
         about: 1,
-        _id: 1
+        _id: 1,
+        chatId: {$arrayElemAt: ["$chatId._id", 0]},
       }
     }
   ]

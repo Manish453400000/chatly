@@ -112,6 +112,7 @@ const logoutUser = asyncHandler(async (req, res) => {
 
   const options = {
     httpOnly: true,
+    SamSite: 'None',
     secure: process.env.NODE_ENV === 'production', 
   }
   return res

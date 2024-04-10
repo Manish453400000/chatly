@@ -16,3 +16,16 @@ export interface User {
   __v: number,
   __id: string,
 }
+
+export interface Friend {
+  avatar: {
+    localPath: string;
+    url: string,
+    _id: string,
+  },
+  isOnline: boolean,
+  username: string,
+  chatId: string,
+  about: string,
+  _id: string,
+}

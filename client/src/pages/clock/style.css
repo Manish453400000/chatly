@@ -1,6 +1,7 @@
 .hour-circle {
   background: #71933d3b;
   backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
 }
 
 .minute-circle {

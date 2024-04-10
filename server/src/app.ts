@@ -36,6 +36,7 @@ app.use(cookieParser());
 
 let onlineUsers = []
 
+// socket io inisalization
 io.on('connection', async (socket:any) => {
     try {
       const cookies = cookie.parse(socket.handshake.headers?.cookie || "");
@@ -76,18 +77,19 @@ io.on('connection', async (socket:any) => {
     }catch(error:any) {
       socket.emit('socketError', error?.message || "Something went wrong while connecting to the socket");
     }
-  })
+})
 
 
 import { userRouter } from './routers/user.routes';
 import { requestRouter } from './routers/request.routes';
 import { chatRouter } from './routers/chat.routes';
 import { updateOnlineStatus } from './socket';
-import { log } from 'console';
+import { messageRouter } from './routers/message.routes';
 
 app.use("/api/v1/user", userRouter)
 app.use("/api/v1/friend", requestRouter)
 app.use("/api/v1/chats", chatRouter)
+app.use("/api/v1/messages", messageRouter)
 
 app.get('/', (req, res) => {
   res.send('hello world')

@@ -24,3 +24,7 @@ export const updateOnlineStatus = async (socket:any, status: boolean) => {
 
 
 }
+
+export const emitSocketEvent = (req:any, roomId:any, event:any, payload:any) => {
+  req.app.get("io").in(roomId).emit(event, payload)
+}

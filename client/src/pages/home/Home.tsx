@@ -61,8 +61,12 @@ const Home = () => {
     <div className='home-container bg-primary overflow-hidden'>
       <div className="navigation-bar">
         <div className="top">
-          <span className={`${activeNav == 'chats' ? 'active':''} nav-btns cursor-pointer`} onClick={() => handelNavigation('chats')}><i className='bx bx-message-rounded-detail'></i></span>
-          <span className={`${activeNav == 'calls' ? 'active':''} nav-btns cursor-pointer`}><i className='bx bx-phone' ></i></span>
+          <span className={`${activeNav == 'chats' ? 'active':''} nav-btns cursor-pointer`} onClick={() => handelNavigation('chats')}>
+            <i className='bx bx-message-rounded-detail'></i>
+          </span>
+          <span className={`${activeNav == 'friends' ? 'active':''} nav-btns cursor-pointer `} onClick={() => handelNavigation('friends')}>
+            <i className="fa-solid fa-user-group text-[13px] m-[2px]"></i>
+          </span>
           <span className={`${activeNav == 'requests' ? 'active':''} nav-btns cursor-pointer`} onClick={() => handelNavigation('requests')}><i className='bx bx-search-alt-2'></i></span>
         </div>
         <div className="bottom">
