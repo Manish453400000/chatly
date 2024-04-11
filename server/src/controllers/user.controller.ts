@@ -112,6 +112,7 @@ const logoutUser = asyncHandler(async (req, res) => {
 
   const options = {
     httpOnly: true,
+    SamSite: 'None',
     secure: process.env.NODE_ENV === 'production', 
   }
   return res
@@ -130,7 +131,7 @@ const logoutUser = asyncHandler(async (req, res) => {
 
 const uploadAvatar = asyncHandler(async (req, res) => {
   const { user } = req.body;
-
+  
   const avatarOnLocalPath = req.file?.path;
   if(!avatarOnLocalPath){
     throw new ApiError(401, "avatar is required");

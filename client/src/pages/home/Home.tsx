@@ -1,11 +1,21 @@
-import { Outlet, useLocation, useNavigate } from 'react-router-dom'
+import { Outlet, useNavigate } from 'react-router-dom'
 import './home.scss'
 import Profile from '../../components/profile/Profile'
 import { useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { User } from '../../interface/user'
 
-import { socket } from '../../socket/socket'
+// import { socket } from '../../socket/socket'
+import { io } from 'socket.io-client'
+import { LocalStorage } from '../../utils'
+
+
+const token = LocalStorage.get("token");
+
+export const socket = io('http://localhost:8080', {
+  withCredentials: true,
+  auth: { token }
+});
 
 
 const Home = () => {
@@ -33,11 +43,12 @@ const Home = () => {
     updatedAt: "",
     username: "",
     __v: 0,
-    __id: "",
+    _id: "",
   })
 
   useEffect(() => {
     if(data.isAuthenticated){
+
       const { user } = data.data;
       setUserData(user);
 
@@ -61,8 +72,12 @@ const Home = () => {
     <div className='home-container bg-primary overflow-hidden'>
       <div className="navigation-bar">
         <div className="top">
-          <span className={`${activeNav == 'chats' ? 'active':''} nav-btns cursor-pointer`} onClick={() => handelNavigation('chats')}><i className='bx bx-message-rounded-detail'></i></span>
-          <span className={`${activeNav == 'calls' ? 'active':''} nav-btns cursor-pointer`}><i className='bx bx-phone' ></i></span>
+          <span className={`${activeNav == 'chats' ? 'active':''} nav-btns cursor-pointer`} onClick={() => handelNavigation('chats')}>
+            <i className='bx bx-message-rounded-detail'></i>
+          </span>
+          <span className={`${activeNav == 'friends' ? 'active':''} nav-btns cursor-pointer `} onClick={() => handelNavigation('friends')}>
+            <i className="fa-solid fa-user-group text-[13px] m-[2px]"></i>
+          </span>
           <span className={`${activeNav == 'requests' ? 'active':''} nav-btns cursor-pointer`} onClick={() => handelNavigation('requests')}><i className='bx bx-search-alt-2'></i></span>
         </div>
         <div className="bottom">

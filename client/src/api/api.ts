@@ -1,9 +1,6 @@
 import axios from "axios";
 import { LocalStorage } from "../utils";
 
-import { AxiosResponse } from "axios";
-import { ApiSuccessResponseInterface } from "../interface/api";
-
 const token = LocalStorage.get("token");
 
 const apiClient = axios.create({
@@ -74,6 +71,17 @@ const getAllNotifications = () => {
   return apiClient.get('friend/request/get-requests');
 }
 
+const getAllMessages = (chatId:string) => {
+  return apiClient.get(`messages/get?chatId=${chatId}`);
+}
+
+const sentMessages = (content:string , chatId:string | undefined) => {
+  const data = {
+    content: content,
+  }
+  return apiClient.post(`messages/send?chatId=${chatId}`, data);
+}
+
 export {
   registerUser,
   loginUser,
@@ -85,5 +93,7 @@ export {
   getAllNotifications,
   acceptRequest,
   rejectRequest,
-  getAllFriends
+  getAllFriends,
+  getAllMessages,
+  sentMessages
 }

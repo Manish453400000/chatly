@@ -4,7 +4,7 @@ import { acceptRequest, getAllNotifications, rejectRequest, searchUsers, sentReq
 import { requestHandler } from '../../utils'
 import './style.scss';
 
-import { socket } from '../../socket/socket';
+import { socket } from '../../pages/home/Home';
 
 //skeleton chatList
 const skUserItems = () => {

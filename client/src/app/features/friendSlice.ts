@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
-// import { initialState } from "../store";
 
-interface Friend {
+
+export interface Friend {
   avatar: {
     localPath: string;
     url: string,
@@ -37,7 +37,7 @@ export const friendSlice = createSlice({
       })
     },
     removeFriend: (state, action) => {
-       state.filter((request:any) => request.id !== action.payload)
+       state.filter((request:any) => request.id !== action.payload.id)
     }
   }
 })
