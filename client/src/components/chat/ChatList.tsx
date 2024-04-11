@@ -7,8 +7,7 @@ import { addAllFriends, addFriend, updateOnlineState } from '../../app/features/
 
 import { requestHandler } from '../../utils';
 import { getAllFriends } from '../../api/api';
-
-import { socket } from '../../pages/home/Home';
+import { useSocket } from '../../context/SocketContext';
 
 
 //skeleton chatList
@@ -42,6 +41,8 @@ interface Friend {
 
 const ChatList = () => { 
 
+  const {socket} = useSocket();
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -52,14 +53,15 @@ const ChatList = () => {
 
 
   useEffect(() => { 
-    
-    socket.on('onlineStatus', (data:{id: string, status: Boolean}) => {
-      dispatch(updateOnlineState(data))
-    })
-
-    socket.on('requestAccepted', (data: Friend) => {
-      dispatch(addFriend(data));
-    });
+    if(socket) {
+      socket.on('onlineStatus', (data:{id: string, status: Boolean}) => {
+        dispatch(updateOnlineState(data))
+      })
+      
+      socket.on('requestAccepted', (data: Friend) => {
+        dispatch(addFriend(data));
+      });
+    }
     (async() => {
       await requestHandler(
         async () => getAllFriends(),

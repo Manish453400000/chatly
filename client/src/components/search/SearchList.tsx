@@ -3,8 +3,8 @@ import { debouncer } from '../../utils'
 import { acceptRequest, getAllNotifications, rejectRequest, searchUsers, sentRequest } from '../../api/api'
 import { requestHandler } from '../../utils'
 import './style.scss';
+import { useSocket } from '../../context/SocketContext';
 
-import { socket } from '../../pages/home/Home';
 
 //skeleton chatList
 const skUserItems = () => {
@@ -67,6 +67,9 @@ interface Request {
 }
 
 const SearchList = () => {
+
+  const { socket } = useSocket();
+
   const [isLoading, setIsLoading] = useState(false);
   const [isRequestLoading, setIsRequestLoading] = useState(false);
   const [isDataEmpty, setIsDataEmpty] = useState(true);
@@ -137,10 +140,12 @@ const SearchList = () => {
   }
 
   useEffect(() => {
-    socket.on('requestReceived', (data:Request) => {
-      setNotification(prevState => [...prevState, data])
-      console.log(data);
-    });
+    if(socket) {
+      socket.on('requestReceived', (data:Request) => {
+        setNotification(prevState => [...prevState, data])
+        console.log(data);
+      });
+    }
     (async() => {
       await requestHandler(
         async () => await getAllNotifications(),

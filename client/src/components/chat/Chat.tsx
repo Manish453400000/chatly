@@ -9,10 +9,13 @@ import { Message } from '../../interface/api';
 
 import { requestHandler } from '../../utils';
 import { getAllMessages, sentMessages } from '../../api/api';
-import { socket } from '../../pages/home/Home';
+import { useSocket } from '../../context/SocketContext';
 
 
 const Chat = () => {
+  
+  const {socket} = useSocket();
+  
   const { id } = useParams()
   const [friendData, setFriendData] = useState<Friend | undefined>(undefined)
 
@@ -68,6 +71,7 @@ const Chat = () => {
   },[messages])
 
   useEffect(() => {
+    if(!socket) return;
     socket.on('messageReceived', (message:any) => {
       setMessages((prevMessages) => [ ...prevMessages, message]);
     })

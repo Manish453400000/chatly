@@ -5,22 +5,14 @@ import { useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { User } from '../../interface/user'
 
-// import { socket } from '../../socket/socket'
-import { io } from 'socket.io-client'
-import { LocalStorage } from '../../utils'
-
-
-const token = LocalStorage.get("token");
-
-export const socket = io('http://localhost:8080', {
-  withCredentials: true,
-  auth: { token }
-});
+import { SocketProvider, useSocket } from '../../context/SocketContext'
 
 
 const Home = () => {
   const [showProfile, setShowProfile] = useState(false);
   const profileContainer = useRef<HTMLDivElement>(null);
+
+  const { socket } = useSocket();
 
   const navigate = useNavigate();
 
@@ -48,6 +40,7 @@ const Home = () => {
 
   useEffect(() => {
     if(data.isAuthenticated){
+      if(!socket) return
 
       const { user } = data.data;
       setUserData(user);
@@ -69,7 +62,8 @@ const Home = () => {
   }
 
   return (
-    <div className='home-container bg-primary overflow-hidden'>
+    <SocketProvider>
+      <div className='home-container bg-primary overflow-hidden'>
       <div className="navigation-bar">
         <div className="top">
           <span className={`${activeNav == 'chats' ? 'active':''} nav-btns cursor-pointer`} onClick={() => handelNavigation('chats')}>
@@ -106,6 +100,7 @@ const Home = () => {
         </div>
       </div>
     </div>
+    </SocketProvider>
   )
 }
 

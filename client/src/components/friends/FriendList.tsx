@@ -1,6 +1,5 @@
 import {useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 
 import { Friend } from '../../interface/user';
 
@@ -9,10 +8,12 @@ import { getAllFriends } from '../../api/api';
 import { requestHandler } from '../../utils';
 
 import { skChatItems } from '../chat/ChatList';
-import { socket } from '../../pages/home/Home';
+import { useSocket } from '../../context/SocketContext';
 
 const FriendList = () => {
-  const navigate = useNavigate();
+
+  const {socket} = useSocket();
+  
   const dispatch = useDispatch();
 
   const [isLoading, setisLoading] = useState(false)
@@ -22,15 +23,16 @@ const FriendList = () => {
 
 
   useEffect(() => { 
-    
-    socket.on('onlineStatus', (data:{id: string, status: Boolean}) => {
-      console.log(data);
-      dispatch(updateOnlineState(data))
-    })
-
-    socket.on('requestAccepted', (data: Friend) => {
-      dispatch(addFriend(data));
-    });
+    if(socket) {
+      socket.on('onlineStatus', (data:{id: string, status: Boolean}) => {
+        console.log(data);
+        dispatch(updateOnlineState(data))
+      })
+      
+      socket.on('requestAccepted', (data: Friend) => {
+        dispatch(addFriend(data));
+      });
+    }
     (async() => {
       await requestHandler(
         async () => getAllFriends(),
