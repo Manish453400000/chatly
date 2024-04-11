@@ -3,13 +3,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 import { Friend } from '../../interface/user';
-import { socket } from '../../socket/socket';
 
 import { updateOnlineState, addFriend, addAllFriends } from '../../app/features/friendSlice';
 import { getAllFriends } from '../../api/api';
 import { requestHandler } from '../../utils';
 
 import { skChatItems } from '../chat/ChatList';
+import { socket } from '../../pages/home/Home';
 
 const FriendList = () => {
   const navigate = useNavigate();

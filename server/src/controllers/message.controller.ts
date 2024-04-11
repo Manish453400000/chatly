@@ -133,7 +133,7 @@ const getAllMessages = asyncHandler(async (req:Request | any, res) => {
     ...messageCommonAggregation(),
     {
       $sort: {
-        createdAt: -1,
+        createdAt: 1,
       }
     }
   ])

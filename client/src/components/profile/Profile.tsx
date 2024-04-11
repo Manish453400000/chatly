@@ -52,9 +52,12 @@ const ProfileSetting = () => {
 
   const handelUpdateAvatar = async () => {
     if(!file) return
-    const data = new FormData()
+    const data = new FormData();
+    console.log(data);
     data.append('avatar', file)
-
+    console.log(file);
+    console.log(data);
+    
     requestHandler(
       async() => await editAvatar(data),
       setIsAvatarLoading,

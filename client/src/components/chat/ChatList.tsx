@@ -8,7 +8,7 @@ import { addAllFriends, addFriend, updateOnlineState } from '../../app/features/
 import { requestHandler } from '../../utils';
 import { getAllFriends } from '../../api/api';
 
-import { socket } from '../../socket/socket';
+import { socket } from '../../pages/home/Home';
 
 
 //skeleton chatList
@@ -54,7 +54,6 @@ const ChatList = () => {
   useEffect(() => { 
     
     socket.on('onlineStatus', (data:{id: string, status: Boolean}) => {
-      console.log(data);
       dispatch(updateOnlineState(data))
     })
 

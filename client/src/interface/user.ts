@@ -14,7 +14,7 @@ export interface User {
   updatedAt: string,
   username: string,
   __v: number,
-  __id: string,
+  _id: string,
 }
 
 export interface Friend {

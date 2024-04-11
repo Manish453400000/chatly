@@ -1,25 +1,29 @@
 import { useNavigate, useParams } from 'react-router-dom'
 import './Chats.scss'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux';
 
 import { Friend } from '../../interface/user';
+import { Message } from '../../interface/api';
+
 import { requestHandler } from '../../utils';
 import { getAllMessages, sentMessages } from '../../api/api';
-import { socket } from '../../socket/socket';
+import { socket } from '../../pages/home/Home';
 
 
 const Chat = () => {
   const { id } = useParams()
   const [friendData, setFriendData] = useState<Friend | undefined>(undefined)
 
+  const chatBox = useRef<HTMLDivElement | null>(null)
+
   const [messageInput, setMessageInput] = useState('')
 
   const [isLoading, setIsLoading] = useState(false);
   const [isMessageSent, setIsMessageSent] = useState(false);
 
-  const [messages, setMessages] = useState<any[]>([])
+  const [messages, setMessages] = useState<Message[]>([])
   const [showSendButton, setShowSendButton] = useState(false);
 
   const selectFriends = (state:any) => state.friends;
@@ -34,7 +38,8 @@ const Chat = () => {
         async () => await getAllMessages(chatId),
         setIsLoading,
         (res) => {
-          console.log(res);
+          setMessages(res.data);
+          console.log(res.data);
         },
         alert
       )
@@ -53,15 +58,22 @@ const Chat = () => {
 
   useEffect(() => {
     if(!friendData) return;
-    console.log(!friendData);
     getMessages(friendData?.chatId)
-
   }, [friendData])
   
   useEffect(() => {
+    if(chatBox.current){
+      chatBox.current.scrollTop = chatBox.current.scrollHeight;
+    }
+  },[messages])
+
+  useEffect(() => {
     socket.on('messageReceived', (message:any) => {
-      setMessages((prevMessages) => [...prevMessages, message]);
+      setMessages((prevMessages) => [ ...prevMessages, message]);
     })
+    return () => {
+      
+    }
   },[])
 
 
@@ -74,13 +86,13 @@ const Chat = () => {
   },[id])
 
   const handelSentMessage = async() => {
-    console.log(messageInput);
     await requestHandler(
       async () => await sentMessages(messageInput, friendData?.chatId),
       setIsMessageSent,
       (res) => {
         console.log(res);
-        setMessages(res.data)
+        setMessages((prevMessages) => [...prevMessages, res.data])
+        setMessageInput('')
       },
       alert
     )
@@ -110,8 +122,33 @@ const Chat = () => {
         </div>
       </div>
 
-      <div className="chat-box flex-1 ">
-
+      <div className="chat-box flex-1 pb-[10px] custom-scrollbar" ref={chatBox}>
+        {
+          isLoading ? 
+            <div className='w-full h-full flex-center'>
+              <div className='flex flex-col justify-center items-center'>
+                <span className='text-[28px] '>
+                  <i className="fa-solid fa-gear fa-spin"></i>
+                </span>
+                <span className='text-[20px] text-[gray] pl-[10px]'>Initializing...</span>
+              </div>
+            </div>
+            :
+            <div className="messages-container flex flex-col gap-[4px] custom-scrollbar px-[10px] py-[5px]">
+              {
+                messages.map((message) => (
+                  <div key={message._id} className={`flex ${message.sender._id !== id? ' justify-end':' justify-start'} flex items-center `}>
+                    <span  className={`${message.sender._id !== id ? 'bg-spacial-glass justify-center':'bg-black-glass justify-start'} text-white px-[8px] py-[3px] rounded-[5px]  inline-flex flex-col min-w-[2rem] text-[14px]`}>
+                      <span className={`${message.sender._id !== id ? 'hidden': ''}  text-[10px] font-light text-[yellow]`}>~{message.sender.username}</span>
+                      <span className='message-font'>{message.content}</span>
+                      {/* <span>{}</span> */}
+                    </span>
+                  </div>
+                ))
+              }
+            </div>
+        }
+        
       </div>
 
       <div className="chat-box-footer w-full h-[4rem] px-[.5rem] bg-secondary flex gap-[8px] items-center text-[20px]">

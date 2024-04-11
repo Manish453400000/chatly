@@ -91,3 +91,21 @@
 .tooltip-main:hover .tooltip {
   opacity: 1;
 }
+
+.custom-scrollbar {
+  scrollbar-width: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  max-width: 3px;
+  width: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #2f2f2f;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #cbcbcb;
+  border-radius: 5px;
+}

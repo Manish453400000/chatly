@@ -132,6 +132,8 @@ const logoutUser = asyncHandler(async (req, res) => {
 const uploadAvatar = asyncHandler(async (req, res) => {
   const { user } = req.body;
 
+  console.log(req.file);
+  
   const avatarOnLocalPath = req.file?.path;
   if(!avatarOnLocalPath){
     throw new ApiError(401, "avatar is required");
