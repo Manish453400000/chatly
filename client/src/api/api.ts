@@ -8,7 +8,7 @@ const apiClient = axios.create({
   withCredentials: true,
   timeout: 120000,
   headers: {
-    'Content-Type': 'application/json',
+    // 'Content-Type': 'application/json',  // this thing will prevent sending files;
     'Authorization': `Bearer ${token}`
   }
 })
@@ -45,8 +45,8 @@ const logoutUser = () => {
   return apiClient.post('/user/logout');
 }
 
-const editAvatar = async (data:any) => {
-  return await apiClient.post('/user/edit/avatar', data)
+const editAvatar = (data:any) => {
+  return apiClient.post('/user/edit/avatar', data)
 }
 
 const searchUsers = (query:string) => {
