@@ -52,14 +52,11 @@ const ProfileSetting = () => {
 
   const handelUpdateAvatar = async () => {
     if(!file) return
-    const formData:any = new FormData().append('avatar', file);
-    // formData.append('avatar', file)
+    const data = new FormData()
+    data.append('avatar', file)
 
-    const option = formData;
-    console.log(option);
-    
     requestHandler(
-      async() => await editAvatar(option),
+      async() => await editAvatar(data),
       setIsAvatarLoading,
       (response) => {
         dispatch(addUser({

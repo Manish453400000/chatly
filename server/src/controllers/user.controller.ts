@@ -131,6 +131,11 @@ const logoutUser = asyncHandler(async (req, res) => {
 
 const uploadAvatar = asyncHandler(async (req, res) => {
   const { user } = req.body;
+<<<<<<< HEAD
+=======
+
+  console.log(req.file);
+>>>>>>> a7c7d50650b4a25f3b1bb6820a4f9c8ee30c872f
   
   const avatarOnLocalPath = req.file?.path;
   if(!avatarOnLocalPath){
