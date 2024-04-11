@@ -1,4 +1,4 @@
-import { Outlet, useNavigate } from 'react-router-dom'
+import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import './Chats.scss'
 
 import { useState, useEffect } from 'react';
@@ -41,10 +41,14 @@ interface Friend {
 
 const ChatList = () => { 
 
+  const location = useLocation();
+
   const {socket} = useSocket();
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const [showChatBox, setShowChatBox] = useState(false);
 
   const [isLoading, setisLoading] = useState(false)
 
@@ -75,15 +79,47 @@ const ChatList = () => {
         alert
       )
     })()
+
+    
     return () => {
       // console.log('unmounted');
     }
   },[])
+
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const handelResize = () => {
+      console.log(window.innerWidth);
+      if(window.innerWidth < 768 ){
+        setIsMobile(true)
+      }else{
+        setIsMobile(false);
+      }
+    }
+    window.addEventListener('resize', handelResize);
+    
+    return () => {
+      window.removeEventListener('resize', handelResize);
+    }
+  },[])
+
+  useEffect(() => {
+    console.log(window.innerWidth);
+    
+    const lastPath =  location.pathname.split('/')
+    if(lastPath[lastPath.length - 1] == 'chats') {
+      setShowChatBox(false)
+      
+    }else{
+      setShowChatBox(true)
+    }
+    
+  }, [location])
   
   return (
     <>
-    <div className="chats-list bg-secondary flex flex-col gap-[10px] flex-1 md:flex-none md:max-w-[30rem]">
-      <div className="chat-list-header px-[.5rem]">
+    <div className={`${isMobile ? `${showChatBox ? 'hidden': ''}` : ''} chats-list bg-secondary flex flex-col gap-[10px] flex-1 md:flex-none md:max-w-[30rem]`}>
+      <div className={`chat-list-header px-[.5rem]`}>
         <div className="featurs flex justify-between">
           <span className='font-semibold text-[20px]'>Chats</span>
           <span className='text-[24px] flex gap-[9px]'>
@@ -149,7 +185,7 @@ const ChatList = () => {
         }
       </div>
     </div>
-    <div className="flex-1 hidden md:block bg-secondary relative">
+    <div className={`${ isMobile ? `${showChatBox ? '': 'hidden'}` : ''} flex-1 md:block bg-secondary relative`}>
       <div className="default-message absolute z-[0] top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] flex flex-col items-center gap-[8px] text-[14px] text-[gray] text-center w-[80%]">
         <span className='text-[22px] text-white'>Whishhhh...</span>
         <span>Send and receive messages without keeping your phone online.</span>

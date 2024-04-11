@@ -42,7 +42,6 @@ const Chat = () => {
         setIsLoading,
         (res) => {
           setMessages(res.data);
-          console.log(res.data);
         },
         alert
       )
@@ -94,7 +93,6 @@ const Chat = () => {
       async () => await sentMessages(messageInput, friendData?.chatId),
       setIsMessageSent,
       (res) => {
-        console.log(res);
         setMessages((prevMessages) => [...prevMessages, res.data])
         setMessageInput('')
       },
@@ -116,7 +114,7 @@ const Chat = () => {
           </div>
         </div>
         <div className="right flex items-center text-[20px] gap-[5px]">
-          <div className="call-btn flex items-center gap-[1px] rounded-[5px]">
+          <div className="call-btn hidden md:flex items-center gap-[1px] rounded-[5px]">
             <div className="vedio cursor-pointer py-[8px] px-[10px] bg-[#484747b1] hover:bg-[#555454d6] flex-center"><i className='bx bx-video'></i></div>
             <div className="audio cursor-pointer py-[8px] px-[10px] bg-[#484747b1] hover:bg-[#555454d6] flex-center"><i className='bx bx-phone'></i></div>
           </div>
