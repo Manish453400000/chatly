@@ -39,18 +39,20 @@ const Home = () => {
   })
 
   useEffect(() => {
-    if(data.isAuthenticated){
-      if(!socket) return
-
-      const { user } = data.data;
-      setUserData(user);
-
-      //io connection
-      socket.connect();
-      socket.emit('login', userData.username)
-      return () => {
-        socket.disconnect();
-      }
+    console.log(data.isAuthenticated);
+    
+    if(!data.isAuthenticated) return;
+    const { user } = data.data;
+    console.log(user);
+    setUserData(user);
+    
+    
+    if(!socket) return
+    //io connection
+    socket.connect();
+    socket.emit('login', userData.username)
+    return () => {
+      socket.disconnect();
     }
   },[data.isAuthenticated])
 

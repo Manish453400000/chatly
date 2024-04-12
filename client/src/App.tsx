@@ -15,6 +15,7 @@ import Status from "./components/status/Status"
 import FriendList from "./components/friends/FriendList"
 import SearchList from "./components/search/SearchList"
 import Test from "./components/Test"
+import GroupChat from "./components/chat/GroupChat"
 
 function App() {
 
@@ -37,7 +38,7 @@ function App() {
             <Route path="/app/home/requests" element={<SearchList />} />
             <Route path="/app/home/chats" element={<ChatList />} >
               <Route path="/app/home/chats/user/:id" element={<Chat />} />
-              <Route path="/app/home/chats/test/:id" element={<Test />} />
+              <Route path="/app/home/chats/group/:id" element={<GroupChat />} />
             </Route> 
           </Route>
         </Route>

@@ -9,6 +9,16 @@ const chatSchema = new Schema({
     type: Boolean,
     default: false,
   },
+  GroupAvatar: {
+    type: {
+      url: String,
+      localPath: String,
+    },
+    default: {
+      url: `http://res.cloudinary.com/dwl9iesij/image/upload/v1712937945/hjrcp00xeqraszmdjdl1.png`,
+      localPath: '',
+    }
+  },
   lastMessage: {
     type: Types.ObjectId,
     ref: "Message"

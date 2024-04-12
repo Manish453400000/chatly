@@ -82,6 +82,14 @@ const sentMessages = (content:string , chatId:string | undefined) => {
   return apiClient.post(`messages/send?chatId=${chatId}`, data);
 }
 
+const getAllGroupChats = () => {
+  return apiClient.get('chats/group/get-all')
+}
+
+const createGroupChat = (data:{name:string, groupIds: string[]}) => {
+  return apiClient.post('chats/group/create', data)
+}
+
 export {
   registerUser,
   loginUser,
@@ -95,5 +103,7 @@ export {
   rejectRequest,
   getAllFriends,
   getAllMessages,
-  sentMessages
+  sentMessages,
+  getAllGroupChats,
+  createGroupChat
 }

@@ -45,8 +45,8 @@ export const chatSlice = createSlice({
       return [...chats]
     },
     addChat: (state, action) => {
-      const chat = action.payload.friend;
-      state.push(chat);
+      const group = action.payload.group;
+      state.push(group);
     },
     updateOnlineState: (state:any, action) => {
       const id = action.payload.id;

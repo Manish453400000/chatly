@@ -13,3 +13,30 @@ export interface Message {
   content: string;
   sender: User;
 }
+
+export interface GroupChats {
+  _id: string;
+  name: string;
+  GroupAvatar: {
+    localPath: string;
+    url: string,
+    _id: string,
+  },
+  isGroupChat: boolean;
+  Participants: [string],
+  admin: string;
+  createdAt: Date;
+  participantDetails: [
+    {
+      _id: string,
+      avatar: {
+        localPath: string;
+        url: string,
+        _id: string,
+      }, 
+      username: string,
+      about: string,
+      isOnline: boolean
+    }
+  ]
+}
