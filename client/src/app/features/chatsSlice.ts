@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
-// import { initialState } from "../store";
+import { GroupChats } from "../../interface/api";
+
 
 interface Participant {
   avatar: {
@@ -44,6 +45,14 @@ export const chatSlice = createSlice({
       const chats = action.payload.chats;
       return [...chats]
     },
+    updateChat: (state, action) => {
+      const updatedGroup:GroupChats = action.payload.group;
+      state.filter(group => {
+        if(group._id === updatedGroup._id){
+          group = updatedGroup;
+        }
+      })
+    },
     addChat: (state, action) => {
       const group = action.payload.group;
       state.push(group);
@@ -64,6 +73,6 @@ export const chatSlice = createSlice({
 })
 
 
-export const { addAllChats, addChat, removeChat, updateOnlineState } = chatSlice.actions;
+export const { addAllChats, addChat, updateChat, removeChat, updateOnlineState } = chatSlice.actions;
 export default chatSlice.reducer;
 

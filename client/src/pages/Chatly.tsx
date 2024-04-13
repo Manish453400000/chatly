@@ -27,7 +27,7 @@ const Chatly = () => {
           async () => await getUser(),
           setIsLoading,
           (response) => {
-            // console.log(response);
+            console.log("user: ",response);
             const { data } = response;
             const payload = {
               isAuthenticated: response.success,

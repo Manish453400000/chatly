@@ -139,6 +139,7 @@ const ProfileSetting = () => {
     </div>
   )
 }
+
 const GeneralSetting = () => {
   return (
     <div>
@@ -146,6 +147,7 @@ const GeneralSetting = () => {
     </div>
   )
 }
+
 const AccountSetting = () => {
   return (
     <div>
@@ -153,6 +155,7 @@ const AccountSetting = () => {
     </div>
   )
 }
+
 const ChatsSetting = () => {
   return (
     <div>
@@ -160,6 +163,7 @@ const ChatsSetting = () => {
     </div>
   )
 }
+
 const NotificationSetting = () => {
   return (
     <div>
@@ -167,6 +171,7 @@ const NotificationSetting = () => {
     </div>
   )
 }
+
 const StorageSetting = () => {
   return (
     <div>
@@ -174,6 +179,7 @@ const StorageSetting = () => {
     </div>
   )
 }
+
 const Help = () => {
   return (
     <div>
@@ -190,13 +196,13 @@ const Profile = () => {
     setActiveOption(type);
   }
   const customOulet = () => {
-    if(activeOption === 'profile') return ProfileSetting()
-    if(activeOption === 'general') return GeneralSetting()
-    if(activeOption === 'account') return AccountSetting()
-    if(activeOption === 'chats') return ChatsSetting()
-    if(activeOption === 'notification') return NotificationSetting()
-    if(activeOption === 'storage') return StorageSetting()
-    if(activeOption === 'help') return Help()
+    if(activeOption === 'profile') return <ProfileSetting />;
+    if(activeOption === 'general') return <GeneralSetting />
+    if(activeOption === 'account') return <AccountSetting />
+    if(activeOption === 'chats') return <ChatsSetting />
+    if(activeOption === 'notification') return <NotificationSetting />
+    if(activeOption === 'storage') return <StorageSetting />
+    if(activeOption === 'help') return <Help />
   }
 
   const [isLoading, setIsLoading] = useState(true);

@@ -4,7 +4,7 @@ import { User } from "../models/user.model";
 
 export const updateOnlineStatus = async (socket:any, status: boolean) => {
   const { _id } = socket.user;
-
+  
   const user = await User.findByIdAndUpdate(
     _id, 
     {

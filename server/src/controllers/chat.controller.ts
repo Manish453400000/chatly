@@ -1,8 +1,8 @@
-import { pipeline } from "stream";
 import { Chat } from "../models/chat.model";
 import { ApiResponse } from "../utils/apiResponse";
 import { asyncHandler } from "../utils/asyncHandler";
 import { ApiError } from "../utils/apiError";
+import { cloudinaryUpload } from "../utils/cloudinary";
 
 const AddParticipantsAggregation = (id:any) => {
   return [
@@ -124,4 +124,54 @@ const getAllGroupChats = asyncHandler(async(req, res) => {
   )
 })
 
-export { getAllChats, createGroupChat, getAllGroupChats }
+const editGroupAvatar = asyncHandler(async(req, res) => {
+  const { user } = req.body;
+  const groupId = req.query.groupId;
+
+  console.log(req.file);
+  
+  const avatarOnLocalPath = req.file?.path;
+  if(!avatarOnLocalPath){
+    throw new ApiError(401, "avatar is required");
+  }
+  
+  const avatar:any = await cloudinaryUpload(avatarOnLocalPath);
+  if(!avatar.url) {
+    throw new ApiError(500, "somthing went wrong while uploading avatar")
+  }
+  
+
+  const updatedGroupAvatar = await Chat.findByIdAndUpdate(
+    groupId,
+    {
+      $set: {
+        GroupAvatar: {
+          localPath: "",
+          url: avatar?.url,
+        }
+      }
+    },
+    {
+      new: true,
+    }
+  ).select(" -password -refreshToken");
+  if(!updatedGroupAvatar) {
+    throw new ApiError(500, "Something went wrong while updating avatar")
+  }
+
+  //send res
+  return res
+  .status(200)
+  .json(
+    new ApiResponse(
+      200, 
+      {
+        group: updatedGroupAvatar
+      },
+      "avatar updated successfully",
+      true
+    )
+  )
+})
+
+export { getAllChats, createGroupChat, getAllGroupChats, editGroupAvatar }

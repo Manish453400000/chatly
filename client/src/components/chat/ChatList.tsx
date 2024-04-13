@@ -71,8 +71,11 @@ const ChatList = () => {
 
 
   useEffect(() => { 
+    console.log(socket);
+    
     if(socket) {
       socket.on('onlineStatus', (data:{id: string, status: Boolean}) => {
+        console.log(data);
         dispatch(updateOnlineState(data))
       })
       
@@ -116,7 +119,6 @@ const ChatList = () => {
   const [isMobile, setIsMobile] = useState(false);
   useEffect(() => {
     const handelResize = () => {
-      console.log(window.innerWidth);
       if(window.innerWidth < 768 ){
         setIsMobile(true)
       }else{
@@ -131,7 +133,6 @@ const ChatList = () => {
   },[])
 
   useEffect(() => {
-    console.log(window.innerWidth);
     
     const lastPath =  location.pathname.split('/')
     if(lastPath[lastPath.length - 1] == 'chats') {

@@ -66,9 +66,9 @@ io.on('connection', async (socket:any) => {
       
       socket.on('disconnect', async () => {
         console.log("user has disconnected 🚫. userId: " + socket.user?._id);
+        updateOnlineStatus(socket, false)
         if(socket.user?._id){
           const id = socket.user?._id;
-          updateOnlineStatus(socket, false)
 
           socket.leave(socket.user?._id);
         }

@@ -71,7 +71,8 @@ const Chat = () => {
 
   useEffect(() => {
     if(!socket) return;
-    socket.on('messageReceived', (message:any) => {
+    socket.on('messageReceived', (message:Message) => {
+      if(message.chat !== id) return;
       setMessages((prevMessages) => [ ...prevMessages, message]);
     })
     return () => {
@@ -88,6 +89,7 @@ const Chat = () => {
     
   },[id])
 
+
   const handelSentMessage = async() => {
     await requestHandler(
       async () => await sentMessages(messageInput, friendData?.chatId),
@@ -99,9 +101,11 @@ const Chat = () => {
       alert
     )
   }
+
+
   
   return (
-    <div className="chat-box-container bg-primary flex flex-col ">
+    <div className="chat-box-container bg-primary flex flex-col relative">
       <div className="chat-box-header bg-secondary px-[5px] py-[8px] flex items-center text-[28px] justify-between">
         <div className="left flex items-center gap-[5px]">
           <span className='flex-center mr-[5px] cursor-pointer' onClick={() => navigate('/app/home/chats')}><i className='bx bxs-left-arrow-alt'></i></span>
@@ -118,8 +122,8 @@ const Chat = () => {
             <div className="vedio cursor-pointer py-[8px] px-[10px] bg-[#484747b1] hover:bg-[#555454d6] flex-center"><i className='bx bx-video'></i></div>
             <div className="audio cursor-pointer py-[8px] px-[10px] bg-[#484747b1] hover:bg-[#555454d6] flex-center"><i className='bx bx-phone'></i></div>
           </div>
-          <div className="search cursor-pointer py-[8px] px-[10px] hover:bg-[#484747bf] flex-center rounded-[5px]">
-            <i className='bx bx-search-alt-2' ></i>
+          <div className="search cursor-pointer py-[8px] px-[10px] hover:text-[#b6fc98] flex-center rounded-[5px]">
+            <i className="fa-solid fa-bars"></i>
           </div>
         </div>
       </div>

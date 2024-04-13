@@ -90,6 +90,10 @@ const createGroupChat = (data:{name:string, groupIds: string[]}) => {
   return apiClient.post('chats/group/create', data)
 }
 
+const editGroupAvatar = (data:any, query:string) => {
+  return apiClient.post(`chats/group/edit/avatar?groupId=${query}`, data)
+}
+
 export {
   registerUser,
   loginUser,
@@ -105,5 +109,6 @@ export {
   getAllMessages,
   sentMessages,
   getAllGroupChats,
-  createGroupChat
+  createGroupChat,
+  editGroupAvatar
 }

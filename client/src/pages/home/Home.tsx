@@ -39,11 +39,9 @@ const Home = () => {
   })
 
   useEffect(() => {
-    console.log(data.isAuthenticated);
     
     if(!data.isAuthenticated) return;
     const { user } = data.data;
-    console.log(user);
     setUserData(user);
     
     
