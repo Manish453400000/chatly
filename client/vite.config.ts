@@ -7,7 +7,7 @@ export default defineConfig({
     host: "localhost",
     port: 3000,
     proxy: {
-      '/api': 'http://localhost:8080'
+      '/api': 'http://chat-api-v01-env.eba-petx5mmg.ap-south-1.elasticbeanstalk.com'
     }
   },
   plugins: [react()],
