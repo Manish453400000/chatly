@@ -2,17 +2,17 @@ import { createSlice } from "@reduxjs/toolkit";
 import { GroupChats } from "../../interface/api";
 
 
-interface Participant {
-  avatar: {
-    localPath: string;
-    url: string,
-    _id: string,
-  };
-  isOnline: boolean;
-  username: string;
-  about: string;
-  _id: string;
-}
+// interface Participant {
+//   avatar: {
+//     localPath: string;
+//     url: string,
+//     _id: string,
+//   };
+//   isOnline: boolean;
+//   username: string;
+//   about: string;
+//   _id: string;
+// }
 
 export interface Chat {
   _id: string,
@@ -41,7 +41,7 @@ export const chatSlice = createSlice({
   name: 'chats',
   initialState,
   reducers: {
-    addAllChats: (state, action) => {
+    addAllChats: (_state, action) => {
       const chats = action.payload.chats;
       return [...chats]
     },

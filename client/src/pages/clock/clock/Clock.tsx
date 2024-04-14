@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react'
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 
 interface Time{
   hour: number;
@@ -11,7 +11,7 @@ const Clock:React.FC<{time:Time, onClickE:any, data: string}> = ({time, onClickE
   const hourHand = useRef<HTMLDivElement>(null)
   const minuteHand = useRef<HTMLDivElement>(null)
 
-  const navigate = useNavigate()
+  // const _navigate = useNavigate()
 
   useEffect(() => {                  
     if(hourHand.current && minuteHand.current){

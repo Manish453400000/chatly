@@ -63,7 +63,7 @@ const ChatList = () => {
 
   const [isLoading, setisLoading] = useState(false)
   const [isGroupChatsLoading, setisGroupChatsLoading] = useState(false)
-  const [isGroupCreateLoading, setisGroupCreateLoading] = useState(false);
+  const [_isGroupCreateLoading, setisGroupCreateLoading] = useState(false);
 
   const selectFriends = (state:any) => state.friends
   const friends:Friend[] = useSelector(selectFriends)
@@ -71,14 +71,14 @@ const ChatList = () => {
   const chats:GroupChats[] = useSelector(selectChats)
 
 
-  useEffect(() => {
-    friends.forEach(friend => {
-      const messageCount = {
-        id: friend._id,
-        count: 0,
-      }
-    })
-  },[])
+  // useEffect(() => {
+  //   friends.forEach(friend => {
+  //     // const messageCount = {
+  //     //   id: friend._id,
+  //     //   count: 0,
+  //     // }
+  //   })
+  // },[])
 
   useEffect(() => {  
     if(socket) {
@@ -86,9 +86,9 @@ const ChatList = () => {
         dispatch(updateOnlineState(data))
       })
 
-      socket.on('messageReceived', (message:Message) => {
-        // eat 5 star do nothing
-      })
+      // socket.on('messageReceived', (_message:Message) => {
+      //   // eat 5 star do nothing
+      // })
 
       socket.on('requestAccepted', (data: Friend) => {
         dispatch(addFriend(data));

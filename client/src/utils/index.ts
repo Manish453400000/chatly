@@ -7,7 +7,7 @@ export const requestHandler = async (
   api: () => Promise<AxiosResponse<ApiSuccessResponseInterface, any>>,
   setLoading: ((loading: boolean) => void) | null,
   onSuccess: (data: ApiSuccessResponseInterface) => void,
-  onError: (error: String) => void,
+  _onError: (error: String) => void,
 ) => {
   setLoading && setLoading(true);
   try {
@@ -48,7 +48,7 @@ export class LocalStorage {
     if(!isBrowser) return;
     localStorage.removeItem(key);
   }
-  static clear(key: string) {
+  static clear(_key: string) {
     if(!isBrowser) return;
     localStorage.clear();
   }

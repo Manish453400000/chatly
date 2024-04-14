@@ -75,9 +75,9 @@ const SearchList = () => {
   const [isDataEmpty, setIsDataEmpty] = useState(true);
   const [defaultMessage, setDefaultMessage] = useState("Search your friends and secrete crush  by their username...")
 
-  const [floading, setFloading] = useState(false);
+  const [_floading, setFloading] = useState(false);
   const [showNotificationBox, setShowNotificationBox] = useState(false);
-  const [notificationSearch, setNotificationSearch] = useState('')
+  const [_notificationSearch, setNotificationSearch] = useState('')
   const [notification, setNotification] = useState<Request[]>([])
   const [isNotificationLoading, setIsNotificationLoading] = useState(false)
 

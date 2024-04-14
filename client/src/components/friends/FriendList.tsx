@@ -3,11 +3,10 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { Friend } from '../../interface/user';
 
-import { updateOnlineState, addFriend, addAllFriends, removeFriend } from '../../app/features/friendSlice';
-import { getAllFriends, unFriend } from '../../api/api';
+import { updateOnlineState, addFriend, removeFriend } from '../../app/features/friendSlice';
+import { unFriend } from '../../api/api';
 import { requestHandler } from '../../utils';
 
-import { skChatItems } from '../chat/ChatList';
 import { useSocket } from '../../context/SocketContext';
 
 const FriendList = () => {
@@ -16,8 +15,7 @@ const FriendList = () => {
   
   const dispatch = useDispatch();
 
-  const [isLoading, setisLoading] = useState(false)
-  const [isUnfriendLoading, setisUnfriendLoading] = useState(false)
+  const [_isUnfriendLoading, setisUnfriendLoading] = useState(false)
 
   const selectFriends = (state:any) => state.friends
   const friends:Friend[] = useSelector(selectFriends)
@@ -34,19 +32,6 @@ const FriendList = () => {
         dispatch(addFriend(data));
       });
     }
-    // (async() => {
-    //   await requestHandler(
-    //     async () => getAllFriends(),
-    //     setisLoading,
-    //     (res) => {
-    //       const payload = {
-    //         friends: res.data
-    //       }
-    //       dispatch(addAllFriends(payload))
-    //     },
-    //     alert
-    //   )
-    // })()
     return () => {
       // console.log('unmounted');
     }
@@ -85,35 +70,7 @@ const FriendList = () => {
         </div>
       </div>
       <div className="friend-list flex-1 flex flex-col gap-[5px] overflow-auto h-full">
-        {
-          isLoading ? 
-            <div className='flex flex-col gap-[10px] overflow-auto custom-scrollbar'>
-              {skChatItems()}
-              {skChatItems()}
-              {skChatItems()}
-              {skChatItems()}
-              {skChatItems()}
-              {skChatItems()}
-              {skChatItems()}
-              {skChatItems()}
-              {skChatItems()}
-              {skChatItems()}
-              {skChatItems()}
-              {skChatItems()}
-              {skChatItems()}
-              {skChatItems()}
-              {skChatItems()}
-              {skChatItems()}
-              {skChatItems()}
-              {skChatItems()}
-              {skChatItems()}
-              {skChatItems()}
-              {skChatItems()}
-              {skChatItems()}
-              {skChatItems()}
-              {skChatItems()}
-            </div>
-            :
+        
             <div className='flex flex-col gap-[10px] overflow-auto custom-scrollbar h-full'>  
               {
                 friends.length < 1 ?
@@ -136,7 +93,6 @@ const FriendList = () => {
                 </div>
               ))}
             </div>
-        }
       </div>
     </div>
     <div className="flex-1 hidden md:block bg-secondary relative">

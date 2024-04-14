@@ -14,7 +14,6 @@ import Chat from "./components/chat/Chat"
 import Status from "./components/status/Status"
 import FriendList from "./components/friends/FriendList"
 import SearchList from "./components/search/SearchList"
-import Test from "./components/Test"
 import GroupChat from "./components/chat/GroupChat"
 
 function App() {

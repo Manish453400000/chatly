@@ -19,7 +19,7 @@ export const friendSlice = createSlice({
   name: 'friends',
   initialState,
   reducers: {
-    addAllFriends: (state, action) => {
+    addAllFriends: (_state, action) => {
       const friends = action.payload.friends;
       return [...friends]
     },

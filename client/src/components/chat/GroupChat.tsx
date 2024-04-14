@@ -30,7 +30,7 @@ const GroupChat = () => {
   const [messageInput, setMessageInput] = useState('')
 
   const [isLoading, setIsLoading] = useState(false);
-  const [isMessageSent, setIsMessageSent] = useState(false);
+  const [_isMessageSent, setIsMessageSent] = useState(false);
 
   const [messages, setMessages] = useState<Message[]>([])
   const [showSendButton, setShowSendButton] = useState(false);
@@ -129,19 +129,19 @@ const GroupChat = () => {
     const data = new FormData()
     data.append('avatar', file)
     console.log(data);
-    // await requestHandler(
-    //   async() => await editGroupAvatar(data, id!),
-    //   setIsAvatarLoading,
-    //   (response) => {
-    //     console.log(response.data);
+    await requestHandler(
+      async() => await editGroupAvatar(data, id!),
+      setIsAvatarLoading,
+      (response) => {
+        console.log(response.data);
         
-    //     dispatch(updateChat({
-    //       group: response.data.group
-    //     }))
-    //     setFile(null)
-    //   },
-    //   alert
-    // )
+        dispatch(updateChat({
+          group: response.data.group
+        }))
+        setFile(null)
+      },
+      alert
+    )
   }
   
   return (

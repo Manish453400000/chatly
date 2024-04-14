@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useEffect, useState } from 'react'
+import { ChangeEvent, useState } from 'react'
 import './profile.scss'
 import { useDispatch, useSelector } from 'react-redux'
 import { User } from '../../interface/user'
@@ -205,7 +205,7 @@ const Profile = () => {
     if(activeOption === 'help') return <Help />
   }
 
-  const [isLoading, setIsLoading] = useState(true);
+  // const [isLoading, setIsLoading] = useState(true);
   return (
     <div className=' main-profile-box md:max-w-[30rem] w-[90%] absolute bottom-[2px] left-[10px] flex h-[26rem] md:h-[30rem] rounded-[5px] pr-[2px] '>
       <div className="options justify-between ">

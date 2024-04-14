@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addUser } from '../app/features/userSlice';
 
 const Chatly = () => {
-  const [isLoading, setIsLoading] = useState(false);
+  const [_isLoading, setIsLoading] = useState(false);
   const getAuthenicatedState = (state:any) => state.user.isAuthenticated
   const isAuthenticated = useSelector(getAuthenicatedState);
   const navigate = useNavigate();

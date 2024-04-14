@@ -24,7 +24,7 @@ const Chat = () => {
   const [messageInput, setMessageInput] = useState('')
 
   const [isLoading, setIsLoading] = useState(false);
-  const [isMessageSent, setIsMessageSent] = useState(false);
+  const [_isMessageSent, setIsMessageSent] = useState(false);
 
   const [messages, setMessages] = useState<Message[]>([])
   const [showSendButton, setShowSendButton] = useState(false);
