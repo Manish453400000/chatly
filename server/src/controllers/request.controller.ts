@@ -333,4 +333,26 @@ const getAllFriends = asyncHandler(async (req, res) => {
 
 })
 
-export { searchUsers, sentRequest, acceptRequest, rejectRequest, getAllRequest, getAllFriends }
+const deleteFriendShip = asyncHandler(async (req, res) => {
+  const friendId = req.query.friendId;
+  const userId = req.body.user._id;
+
+  await User.findByIdAndUpdate(
+    {_id: friendId},
+    {$pull: {friends: userId}},
+    {new: true},
+  )
+  await User.findByIdAndUpdate(
+    {_id: userId},
+    {$pull: {friends: friendId}},
+    {new: true},
+  )
+
+  return res
+  .status(200)
+  .json(
+    new ApiResponse(200, {}, "friend deleted successfully", true)
+  )
+})
+
+export { searchUsers, sentRequest, acceptRequest, rejectRequest, deleteFriendShip, getAllRequest, getAllFriends }

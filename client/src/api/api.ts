@@ -94,6 +94,10 @@ const editGroupAvatar = (data:any, query:string) => {
   return apiClient.post(`chats/group/edit/avatar?groupId=${query}`, data)
 }
 
+const unFriend = (friendId: string) => {
+  return apiClient.get(`friend/unFriend?friendId=${friendId}`)
+}
+
 export {
   registerUser,
   loginUser,
@@ -110,5 +114,6 @@ export {
   sentMessages,
   getAllGroupChats,
   createGroupChat,
-  editGroupAvatar
+  editGroupAvatar,
+  unFriend,
 }

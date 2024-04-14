@@ -3,8 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { Friend } from '../../interface/user';
 
-import { updateOnlineState, addFriend, addAllFriends } from '../../app/features/friendSlice';
-import { getAllFriends } from '../../api/api';
+import { updateOnlineState, addFriend, addAllFriends, removeFriend } from '../../app/features/friendSlice';
+import { getAllFriends, unFriend } from '../../api/api';
 import { requestHandler } from '../../utils';
 
 import { skChatItems } from '../chat/ChatList';
@@ -17,6 +17,7 @@ const FriendList = () => {
   const dispatch = useDispatch();
 
   const [isLoading, setisLoading] = useState(false)
+  const [isUnfriendLoading, setisUnfriendLoading] = useState(false)
 
   const selectFriends = (state:any) => state.friends
   const friends:Friend[] = useSelector(selectFriends)
@@ -33,23 +34,40 @@ const FriendList = () => {
         dispatch(addFriend(data));
       });
     }
-    (async() => {
-      await requestHandler(
-        async () => getAllFriends(),
-        setisLoading,
-        (res) => {
-          const payload = {
-            friends: res.data
-          }
-          dispatch(addAllFriends(payload))
-        },
-        alert
-      )
-    })()
+    // (async() => {
+    //   await requestHandler(
+    //     async () => getAllFriends(),
+    //     setisLoading,
+    //     (res) => {
+    //       const payload = {
+    //         friends: res.data
+    //       }
+    //       dispatch(addAllFriends(payload))
+    //     },
+    //     alert
+    //   )
+    // })()
     return () => {
       // console.log('unmounted');
     }
   },[])
+
+  const handelUnfriend = (friendId: string) => {
+    (async() => {
+      await requestHandler(
+        async () => unFriend(friendId),
+        setisUnfriendLoading,
+        (res) => {
+          console.log(res.data);
+          dispatch(removeFriend({id: friendId}))
+        },
+        alert
+      )
+    })()
+  }
+ 
+
+
   return (
     <>
     <div className="chats-list bg-secondary flex flex-col gap-[10px] flex-1 md:flex-none md:max-w-[30rem]">
@@ -112,8 +130,8 @@ const FriendList = () => {
                     </div>
                     <div className="last-messages whitespace-nowrap text-[12px] text-[#bebdbd] ">{friend.about}</div>
                   </div>
-                  <button className='right px-[6px] py-[4px] bg-[#424242] text-[#ff7f7f] rounded-[5px]'>
-                    <i className='bx bx-trash'></i>
+                  <button className='right px-[6px] py-[4px] bg-[#424242] text-[#ff7f7f] rounded-[5px]' onClick={() => handelUnfriend(friend._id)}>
+                      <i className='bx bx-trash'></i>
                   </button>
                 </div>
               ))}

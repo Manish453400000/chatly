@@ -11,7 +11,7 @@ import { useSocket } from '../../context/SocketContext';
 import { addAllChats, addChat } from '../../app/features/chatsSlice';
 
 //interface
-import { GroupChats } from '../../interface/api';
+import { GroupChats, Message } from '../../interface/api';
 
 
 //skeleton chatList
@@ -29,6 +29,7 @@ export const skChatItems = () => {
     </div>
   )
 }
+
 
 interface Friend {
   avatar: {
@@ -70,15 +71,25 @@ const ChatList = () => {
   const chats:GroupChats[] = useSelector(selectChats)
 
 
-  useEffect(() => { 
-    console.log(socket);
-    
+  useEffect(() => {
+    friends.forEach(friend => {
+      const messageCount = {
+        id: friend._id,
+        count: 0,
+      }
+    })
+  },[])
+
+  useEffect(() => {  
     if(socket) {
       socket.on('onlineStatus', (data:{id: string, status: Boolean}) => {
-        console.log(data);
         dispatch(updateOnlineState(data))
       })
-      
+
+      socket.on('messageReceived', (message:Message) => {
+        // eat 5 star do nothing
+      })
+
       socket.on('requestAccepted', (data: Friend) => {
         dispatch(addFriend(data));
       });

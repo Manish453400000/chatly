@@ -37,7 +37,7 @@ export const friendSlice = createSlice({
       })
     },
     removeFriend: (state, action) => {
-       state.filter((request:any) => request.id !== action.payload.id)
+       state.filter((request:any) => request._id !== action.payload.id)
     }
   }
 })
