@@ -16,7 +16,7 @@ const server = createServer(app);
 const io = new Server(server, {
   pingTimeout: 60000,
   cors: {
-    origin: "http://localhost:3000",
+    origin: process.env.CORS_ORIGIN || "https://secret-chat-app-one.vercel.app/",
     credentials: true,
   }
 })
@@ -25,7 +25,7 @@ app.set("io", io); //using this to avoid usage of `global` variables
 
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: process.env.CORS_ORIGIN || "https://secret-chat-app-one.vercel.app/",
     credentials: true,
   })
 )
