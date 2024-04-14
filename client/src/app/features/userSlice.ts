@@ -18,12 +18,12 @@ export const userSlice = createSlice({
       return user
     },
     // updateUser: () => {},
-    removeUser: (state:any, _action) => {
-      const user = initialState;
-      state = user;
-    }
+    // removeUser: (state:any, _action) => {
+    //   const user = initialState;
+    //   state = user;
+    // }
   }
 })
 
-export const { addUser, removeUser } = userSlice.actions;
+export const { addUser } = userSlice.actions;
 export default userSlice.reducer;
