@@ -11,7 +11,7 @@ import { useSocket } from '../../context/SocketContext';
 import { addAllChats, addChat } from '../../app/features/chatsSlice';
 
 //interface
-import { GroupChats, Message } from '../../interface/api';
+import { GroupChats } from '../../interface/api';
 
 
 //skeleton chatList
