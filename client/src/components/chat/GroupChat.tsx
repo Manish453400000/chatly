@@ -150,7 +150,7 @@ const GroupChat = () => {
         <div className="left flex items-center gap-[5px]">
           <span className='flex-center mr-[5px] cursor-pointer' onClick={() => navigate('/app/home/chats')}><i className='bx bxs-left-arrow-alt'></i></span>
           <div className='logo w-[36px] h-[36px] rounded-full object-cover object-center'>
-            <img src={GroupData?.GroupAvatar.url} alt={'avatar'} className='w-full h-full object-cover ' />
+            <img src={GroupData?.groupAvatar.url} alt={'avatar'} className='w-full h-full object-cover ' />
           </div>
           <div className="name text-[16px] font-semibold">
             <div className='overflow-hidden'>{GroupData?.name}</div>
@@ -170,7 +170,7 @@ const GroupChat = () => {
       <div className={`${showGroupBox ? '': 'hidden'} chat-info-box flex flex-col items-center absolute right-0 top-[4rem] z-[20] rounded-[5px] px-[10px] py-[15px] w-[90%] max-w-[23rem]`}>
         <div className='flex justify-center gap-[15px]'>
         <div className="avatar-profile w-[5rem] rounded-full relative  overflow-visible aspect-square">
-          <img src={ GroupData?.GroupAvatar?.url} className=' object-cover overflow-hidden rounded-[50%] w-full aspect-square' alt="" />
+          <img src={ GroupData?.groupAvatar?.url} className=' object-cover overflow-hidden rounded-[50%] w-full aspect-square' alt="" />
           <label htmlFor="fileInput">
             <div className="pen bg-white rounded-full flex-center text-[20px] absolute bottom-0 right-0 z-30 p-[5px] text-black cursor-pointer ">
                 <i className='bx bx-pencil'></i>

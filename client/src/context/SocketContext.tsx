@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from 'react'
+import React, { createContext, useContext, useEffect, useMemo, useState } from 'react'
 import io from 'socket.io-client'
 import { LocalStorage } from '../utils';
 
@@ -20,11 +20,26 @@ export const SocketContext = createContext<{
 const useSocket = () => useContext(SocketContext)
 
 const SocketProvider: React.FC<{children: React.ReactNode}> = ({children}) => {
-  const [socket, setSocket] = useState<ReturnType<typeof io> | null>(null);
+  
+  const token = LocalStorage.get("token");
+  
+  const socket = useMemo(() => {
+    if(!token) return null;
+    return io('http://localhost:8080', {
+    withCredentials: true,
+    auth: { token }
+  }); 
+  }, [token])
+  
 
   useEffect(() => {
-    setSocket(getSocket())
-  }, [])
+    const socketInstance = socket; 
+    return () => {
+      if(socketInstance) {
+        socketInstance.disconnect();
+      }
+    }
+  }, [socket])
 
   return (
     <SocketContext.Provider value={{socket}}>

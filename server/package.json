@@ -4,9 +4,9 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "start": " node ./dist/server.js",
+    "start": "concurrently \"npm run build\" \"npm run server\"",
     "server": "nodemon ./dist/server.js",
-    "build": "npx tsc -b ",
+    "build": "npx tsc -b -w",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

@@ -17,13 +17,13 @@ export interface Message {
 export interface GroupChats {
   _id: string;
   name: string;
-  GroupAvatar: {
+  groupAvatar: {
     localPath: string;
     url: string,
     _id: string,
   },
   isGroupChat: boolean;
-  Participants: [string],
+  participants: [string],
   admin: string;
   createdAt: Date;
   participantDetails: [
@@ -39,4 +39,30 @@ export interface GroupChats {
       isOnline: boolean
     }
   ]
+}
+export interface Chats {
+  _id: string,
+  name: string,
+  isGroupChat: boolean,
+  groupAvatar: {
+    localPath: string;
+    url: string,
+    _id: string,
+  },
+  participants: [string],
+  admin: string,
+  messages: Message[],
+  participantDetails: [
+    {
+      avatar: {
+        localPath: string;
+        url: string,
+        _id: string,
+      };
+      isOnline: boolean;
+      username: string;
+      about: string;
+      _id: string;
+    }
+  ],
 }

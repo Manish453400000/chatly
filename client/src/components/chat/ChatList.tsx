@@ -6,12 +6,12 @@ import { useSelector, useDispatch } from 'react-redux';
 import { addAllFriends, addFriend, updateOnlineState } from '../../app/features/friendSlice';
 
 import { requestHandler } from '../../utils';
-import { createGroupChat, getAllFriends, getAllGroupChats } from '../../api/api';
+import { createGroupChat, getAllFriends, getAllChats } from '../../api/api';
 import { useSocket } from '../../context/SocketContext';
-import { addAllChats, addChat } from '../../app/features/chatsSlice';
+import { addAllChats, addChat, addMessage } from '../../app/features/chatsSlice';
 
 //interface
-import { GroupChats } from '../../interface/api';
+import { GroupChats, Message } from '../../interface/api';
 
 
 //skeleton chatList
@@ -62,7 +62,6 @@ const ChatList = () => {
   const [showGroupBox, setShowGroupBox] = useState(false);
 
   const [isLoading, setisLoading] = useState(false)
-  const [isGroupChatsLoading, setisGroupChatsLoading] = useState(false)
   const [_isGroupCreateLoading, setisGroupCreateLoading] = useState(false);
 
   const selectFriends = (state:any) => state.friends
@@ -70,25 +69,11 @@ const ChatList = () => {
   const selectChats = (state:any) => state.chats
   const chats:GroupChats[] = useSelector(selectChats)
 
-
-  // useEffect(() => {
-  //   friends.forEach(friend => {
-  //     // const messageCount = {
-  //     //   id: friend._id,
-  //     //   count: 0,
-  //     // }
-  //   })
-  // },[])
-
   useEffect(() => {  
     if(socket) {
       socket.on('onlineStatus', (data:{id: string, status: Boolean}) => {
         dispatch(updateOnlineState(data))
       })
-
-      // socket.on('messageReceived', (_message:Message) => {
-      //   // eat 5 star do nothing
-      // })
 
       socket.on('requestAccepted', (data: Friend) => {
         dispatch(addFriend(data));
@@ -109,8 +94,8 @@ const ChatList = () => {
     })();
     (async() => {
       await requestHandler(
-        async () => getAllGroupChats(),
-        setisGroupChatsLoading,
+        async () => getAllChats(),
+        setisLoading,
         (res) => {
           const payload = {
             chats: res.data
@@ -125,6 +110,21 @@ const ChatList = () => {
     return () => {
       // console.log('unmounted');
     }
+  },[])
+
+
+  useEffect(() => {
+  if(!socket) return;
+  socket.on('messageReceived', (message:Message) => {
+    console.log(message);
+    dispatch(addMessage({message, chatId: message.chat}))
+  })
+  return () => {
+    socket.off('messageReceived', (message:Message) => {
+    console.log(message);
+    dispatch(addMessage({message, chatId: message.chat}))
+  })
+  }
   },[])
 
   const [isMobile, setIsMobile] = useState(false);
@@ -197,7 +197,7 @@ const ChatList = () => {
       </div>
       <div className="friend-list flex-1 flex flex-col gap-[5px] overflow-auto h-full">
         {
-          isLoading && isGroupChatsLoading ? 
+          isLoading ? 
             <div className='flex flex-col gap-[10px] overflow-auto custom-scrollbar'>
               {skChatItems()}
               {skChatItems()}
@@ -227,44 +227,38 @@ const ChatList = () => {
             :
             <div className='flex flex-col gap-[10px] overflow-auto custom-scrollbar h-full'>  
               {
-                friends.length < 1 ?
-              <div className=' w-full h-[100%] flex-center text-[13px] text-[gray]'>Make friends to chat</div>
-              :
-              friends.map((friend) => (
-                <div className='w-full flex-shrink-0 flex items-center gap-[10px] py-[10px] px-[.5rem] hover:bg-[#373737] rounded-[5px] cursor-pointer' key={friend._id} onClick={() => navigate(`/app/home/chats/user/${friend._id}`)}>
-                  <div className={`${friend.isOnline ? 'online': ''} left w-[35px] h-[35px] rounded-full overflow-visible`}>
-                    <img src={friend.avatar.url} alt={'avatar'} className='w-full object-cover object-center h-full rounded-full' loading='lazy' />
-                  </div>
-                  <div className="right text-[14px] flex-1 ">
-                    <div className="name flex justify-between items-center w-full ">
-                      <span>{friend.username}</span>
-                      <span className='text-[11px] text-[#d1d1d1]'>{'today'}</span>
-                    </div>
-                    <div className="last-messages whitespace-nowrap text-[12px] text-[#bebdbd] ">{friend.about}</div>
-                  </div>
-                </div>
-              ))}
-
-              {
                 chats.length < 1 ? 
                 <div></div>
                 :
-                chats.map((group) => (
-                  <div className='w-full flex-shrink-0 flex items-center gap-[10px] py-[10px] px-[.5rem] hover:bg-[#373737] rounded-[5px] cursor-pointer' key={group._id} onClick={() => navigate(`/app/home/chats/group/${group._id}`)}>
-                  <div className={` left w-[35px] h-[35px] rounded-full overflow-visible`}>
-                    <img src={group.GroupAvatar.url} alt={'avatar'} className='w-full object-cover object-center h-full rounded-full' loading='lazy' />
-                  </div>
-                  <div className="right text-[14px] flex-1 ">
-                    <div className="name flex justify-between items-center w-full ">
-                      <span>{group.name}</span>
-                      <span className='text-[11px] text-[#d1d1d1]'>{'today'}</span>
+                chats.map((chat) => (
+                  !chat.isGroupChat ? 
+                    <div className='w-full flex-shrink-0 flex items-center gap-[10px] py-[10px] px-[.5rem] hover:bg-[#373737] rounded-[5px] cursor-pointer' key={chat._id} onClick={() => navigate(`/app/home/chats/user/${chat.participantDetails[0]._id}`)}>
+                      <div className={`${chat.participantDetails[0].isOnline ? 'online': ''} left w-[35px] h-[35px] rounded-full overflow-visible`}>
+                        <img src={chat.participantDetails[0].avatar.url} alt={'avatar'} className='w-full object-cover object-center h-full rounded-full' loading='lazy' />
+                      </div>
+                      <div className="right text-[14px] flex-1 ">
+                        <div className="name flex justify-between items-center w-full ">
+                          <span>{chat.participantDetails[0].username}</span>
+                          <span className='text-[11px] text-[#d1d1d1]'>{'today'}</span>
+                        </div>
+                        <div className="last-messages whitespace-nowrap text-[12px] text-[#bebdbd] ">{chat.participantDetails[0].about}</div>
+                      </div>
                     </div>
-                    <div className="last-messages whitespace-nowrap text-[12px] text-[#bebdbd] ">{group.admin || ''}</div>
-                  </div>
-                </div>
+                  :
+                    <div className='w-full flex-shrink-0 flex items-center gap-[10px] py-[10px] px-[.5rem] hover:bg-[#373737] rounded-[5px] cursor-pointer' key={chat._id} onClick={() => navigate(`/app/home/chats/group/${chat._id}`)}>
+                      <div className={` left w-[35px] h-[35px] rounded-full overflow-visible`}>
+                        <img src={chat.groupAvatar.url} alt={'avatar'} className='w-full object-cover object-center h-full rounded-full' loading='lazy' />
+                      </div>
+                      <div className="right text-[14px] flex-1 ">
+                        <div className="name flex justify-between items-center w-full ">
+                          <span>{chat.name}</span>
+                          <span className='text-[11px] text-[#d1d1d1]'>{'today'}</span>
+                        </div>
+                        <div className="last-messages whitespace-nowrap text-[12px] text-[#bebdbd] ">{chat.admin || ''}</div>
+                      </div>
+                    </div>
                 ))
               }
-
             </div>
         }
       </div>

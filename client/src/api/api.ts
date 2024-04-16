@@ -60,9 +60,11 @@ const sentRequest = (data: any) => {
 const acceptRequest = async (requestId: string) => {
   return await apiClient.get(`friend/request/accept?requestId=${requestId}`)
 }
+
 const rejectRequest = async (requestId: string) => {
   return await apiClient.get(`friend/request/reject?requestId=${requestId}`)
 }
+
 const getAllFriends = async () => {
   return await apiClient.get(`friend/get-friends`)
 }
@@ -82,8 +84,8 @@ const sentMessages = (content:string , chatId:string | undefined) => {
   return apiClient.post(`messages/send?chatId=${chatId}`, data);
 }
 
-const getAllGroupChats = () => {
-  return apiClient.get('chats/group/get-all')
+const getAllChats = () => {
+  return apiClient.get('chats/get-all')
 }
 
 const createGroupChat = (data:{name:string, groupIds: string[]}) => {
@@ -112,7 +114,7 @@ export {
   getAllFriends,
   getAllMessages,
   sentMessages,
-  getAllGroupChats,
+  getAllChats,
   createGroupChat,
   editGroupAvatar,
   unFriend,

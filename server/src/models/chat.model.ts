@@ -9,7 +9,7 @@ const chatSchema = new Schema({
     type: Boolean,
     default: false,
   },
-  GroupAvatar: {
+  groupAvatar: {
     type: {
       url: String,
       localPath: String,
@@ -23,7 +23,7 @@ const chatSchema = new Schema({
     type: Types.ObjectId,
     ref: "Message"
   },
-  Participants: [
+  participants: [
     {
       type: Types.ObjectId,
       ref: "User",

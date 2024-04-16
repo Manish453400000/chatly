@@ -1,41 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { GroupChats } from "../../interface/api";
+import { Chats } from "../../interface/api";
 
 
-// interface Participant {
-//   avatar: {
-//     localPath: string;
-//     url: string,
-//     _id: string,
-//   };
-//   isOnline: boolean;
-//   username: string;
-//   about: string;
-//   _id: string;
-// }
 
-export interface Chat {
-  _id: string,
-  name: string,
-  isGroupChat: boolean,
-  Participants: [string],
-  admin: string,
-  participantDetails: [
-    {
-      avatar: {
-        localPath: string;
-        url: string,
-        _id: string,
-      };
-      isOnline: boolean;
-      username: string;
-      about: string;
-      _id: string;
-    }
-  ],
-}
 
-const initialState:Chat[] = [];
+
+const initialState:Chats[] = [];
 
 export const chatSlice = createSlice({
   name: 'chats',
@@ -46,7 +16,7 @@ export const chatSlice = createSlice({
       return [...chats]
     },
     updateChat: (state, action) => {
-      const updatedGroup:GroupChats = action.payload.group;
+      const updatedGroup:Chats = action.payload.group;
       state.filter(group => {
         if(group._id === updatedGroup._id){
           group = updatedGroup;
@@ -68,11 +38,24 @@ export const chatSlice = createSlice({
     },
     removeChat: (state, action) => {
        state.filter((request:any) => request.id !== action.payload.id)
+    },
+    addMessage: (state:any, action) => {
+      const {chatId, message} = action.payload;
+      const updatedChat = state.map((chat: Chats) => {
+        if(chat._id === chatId) {
+          return {
+            ...chat,
+            messages: [...chat.messages, message]
+          }
+        }
+      })
+
+      return updatedChat;
     }
   }
 })
 
 
-export const { addAllChats, addChat, updateChat, removeChat, updateOnlineState } = chatSlice.actions;
+export const { addAllChats, addChat, addMessage, updateChat, removeChat, updateOnlineState } = chatSlice.actions;
 export default chatSlice.reducer;
 

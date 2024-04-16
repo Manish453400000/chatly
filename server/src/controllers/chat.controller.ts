@@ -3,15 +3,15 @@ import { ApiResponse } from "../utils/apiResponse";
 import { asyncHandler } from "../utils/asyncHandler";
 import { ApiError } from "../utils/apiError";
 import { cloudinaryUpload } from "../utils/cloudinary";
+import { messageCommonAggregation } from "./message.controller";
+import  mongoose from "mongoose";
 
 const AddParticipantsAggregation = (id:any) => {
   return [
     {
       $lookup: {
         from: "users",
-        // foreignField: "_id",
-        // localField: "participants",
-        let: {participants: "$Participants"},
+        let: {participants: "$participants"},
         pipeline: [
           {
             $match: {
@@ -46,7 +46,38 @@ const getAllChats = asyncHandler(async (req, res) => {
   const chats = await Chat.aggregate([
     {
       $match: {
-        Participants: req.body.user._id
+        participants: req.body.user._id
+      }
+    },
+    {
+      $lookup: {
+        from: "messages",
+        let: {id: "$_id"},
+        pipeline:[
+          {
+            $match: {
+              $expr: {$eq: ["$chat", "$$id"]}
+            }
+          },
+          ...messageCommonAggregation(),
+          {
+            $sort: {
+              createdAt: 1,
+            }
+          },
+          {
+            $addFields: {
+              sendTime: {
+                $dateToString : {
+                  format: "%H:%M", 
+                  date: "$createdAt",
+                  timezone: "Asia/Kolkata"
+                }
+              }
+            }
+          }
+        ],
+        as: "messages"
       }
     },
     ...AddParticipantsAggregation(req.body.user._id),
@@ -69,7 +100,7 @@ const createGroupChat = asyncHandler(async(req, res) => {
   const newGroupInstence = await Chat.create({
     isGroupChat: true,
     name: name,
-    Participants: participants,
+    participants: participants,
     admin: req.body.user._id
   })
 
@@ -102,7 +133,7 @@ const getAllGroupChats = asyncHandler(async(req, res) => {
     {
       $match: {
         isGroupChat: true,
-        Participants: {
+        participants: {
           $elemMatch: {
             $eq: userId,
           }
@@ -145,7 +176,7 @@ const editGroupAvatar = asyncHandler(async(req, res) => {
     groupId,
     {
       $set: {
-        GroupAvatar: {
+        groupAvatar: {
           localPath: "",
           url: avatar?.url,
         }

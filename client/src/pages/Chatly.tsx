@@ -6,6 +6,7 @@ import { Outlet, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { addUser } from '../app/features/userSlice';
+import { SocketProvider } from '../context/SocketContext';
 
 const Chatly = () => {
   const [_isLoading, setIsLoading] = useState(false);
@@ -27,7 +28,6 @@ const Chatly = () => {
           async () => await getUser(),
           setIsLoading,
           (response) => {
-            console.log("user: ",response);
             const { data } = response;
             const payload = {
               isAuthenticated: response.success,
@@ -46,9 +46,11 @@ const Chatly = () => {
   }, [])
   
   return (
+    <SocketProvider >
     <div className='max-h-[100vh] overflow-hidden bg-secondary'>
       <Outlet />
     </div>
+    </SocketProvider>
   )
 }
 

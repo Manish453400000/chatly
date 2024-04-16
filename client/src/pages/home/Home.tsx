@@ -39,19 +39,18 @@ const Home = () => {
   })
 
   useEffect(() => {
-    
-    if(!data.isAuthenticated) return;
-    const { user } = data.data;
-    setUserData(user);
-    
-    
     if(!socket) return
-    //io connection
-    socket.connect();
     socket.emit('login', userData.username)
     return () => {
-      socket.disconnect();
     }
+  }, [socket])
+
+  useEffect(() => {
+    if(!data.isAuthenticated) return;
+
+    const { user } = data.data;
+    setUserData(user);
+
   },[data.isAuthenticated])
 
   const [activeNav, setActiveNav]= useState('chats');
@@ -62,7 +61,6 @@ const Home = () => {
   }
 
   return (
-    <SocketProvider>
       <div className='home-container bg-primary overflow-hidden'>
       <div className="navigation-bar">
         <div className="top">
@@ -100,7 +98,6 @@ const Home = () => {
         </div>
       </div>
     </div>
-    </SocketProvider>
   )
 }
 

@@ -9,7 +9,7 @@ import { emitSocketEvent } from "../socket";
 import { ApiResponse } from "../utils/apiResponse";
 
 
-const messageCommonAggregation = () => {
+export const messageCommonAggregation = () => {
   return [
     {
       $lookup: {
@@ -22,7 +22,6 @@ const messageCommonAggregation = () => {
             $project: {
               username: 1,
               avatar: 1,
-              email: 1
             }
           }
         ]
@@ -94,7 +93,7 @@ const sendMessage = asyncHandler(async (req:any | Request, res) => {
     throw new ApiError(500, "Internal server error")
   }
 
-  chat?.Participants.forEach((participantId) => {
+  chat?.participants.forEach((participantId) => {
     if(participantId.toString() === req.body.user._id.toString()) return;
 
     emitSocketEvent(
@@ -120,7 +119,7 @@ const getAllMessages = asyncHandler(async (req:Request | any, res) => {
     throw new ApiError(400, "Chat does not exist")
   }
 
-  if(!seletedChat.Participants?.includes(req.body.user?._id)){
+  if(!seletedChat.participants?.includes(req.body.user?._id)){
     throw new ApiError(400, "user is not a part of this chat")
   }
 
@@ -131,6 +130,11 @@ const getAllMessages = asyncHandler(async (req:Request | any, res) => {
       }
     },
     ...messageCommonAggregation(),
+    {
+      $project: {
+        sendTime: {$dateToString: {format: "%H:%M:%S", date: "$cheatedAt"}}
+      }
+    },
     {
       $sort: {
         createdAt: 1,

@@ -143,7 +143,6 @@ const SearchList = () => {
     if(socket) {
       socket.on('requestReceived', (data:Request) => {
         setNotification(prevState => [...prevState, data])
-        console.log(data);
       });
     }
     (async() => {

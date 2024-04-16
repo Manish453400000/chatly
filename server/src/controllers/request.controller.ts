@@ -8,6 +8,8 @@ import { Types } from "mongoose";
 import { Chat } from "../models/chat.model";
 import { response } from "express";
 import { pipeline } from "stream";
+import { emitSocketEvent } from "../socket";
+import { Message } from "../models/message.model";
 
 
 const searchUsers = asyncHandler(async (req, res) => {
@@ -95,7 +97,8 @@ const sentRequest = asyncHandler(async (req, res) => {
     }
   }
 
-  io.to(receiverId.toString()).emit('requestReceived', requestData);
+  // io.to(receiverId.toString()).emit('requestReceived', requestData);
+  emitSocketEvent(req, receiverId.toString(), 'requestReceived', requestData);
 
   return res
   .status(200)
@@ -220,7 +223,7 @@ const acceptRequest = asyncHandler(async (req, res) => {
     const participants = [request.senderId, request.receiverId]
     const newChatInstance = await Chat.create({
       name: 'One on one chat',
-      Participants: participants,
+      participants: participants,
       admin: request.senderId,
     })
     if(!newChatInstance) {
@@ -292,8 +295,8 @@ const getAllFriends = asyncHandler(async (req, res) => {
             $match: {
               $expr: {
                 $and: [
-                  {$in: ["$$friendId", "$Participants"]},
-                  {$in: [req.body.user._id, "$Participants"]}
+                  {$in: ["$$friendId", "$participants"]},
+                  {$in: [req.body.user._id, "$participants"]}
                 ]
               }
             }
@@ -347,11 +350,23 @@ const deleteFriendShip = asyncHandler(async (req, res) => {
     {$pull: {friends: friendId}},
     {new: true},
   )
+  
+  const chat = await Chat.findOne({
+    isGroupChat: false,
+    participants: { $all: [userId, friendId]}
+  })
+
+  if(chat) {
+    await Message.deleteMany({chat: chat._id})
+    await Chat.findByIdAndDelete(chat._id)
+    
+  }
+  
 
   return res
   .status(200)
   .json(
-    new ApiResponse(200, {}, "friend deleted successfully", true)
+    new ApiResponse(200, chat, "friend deleted successfully", true)
   )
 })
 

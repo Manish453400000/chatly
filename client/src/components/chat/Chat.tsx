@@ -2,14 +2,15 @@ import { useNavigate, useParams } from 'react-router-dom'
 import './Chats.scss'
 
 import { useEffect, useRef, useState } from 'react'
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { Friend } from '../../interface/user';
-import { Message } from '../../interface/api';
+import { Chats, Message } from '../../interface/api';
 
 import { requestHandler } from '../../utils';
 import { getAllMessages, sentMessages } from '../../api/api';
 import { useSocket } from '../../context/SocketContext';
+import { addMessage } from '../../app/features/chatsSlice';
 
 
 const Chat = () => {
@@ -17,6 +18,8 @@ const Chat = () => {
   const {socket} = useSocket();
   
   const { id } = useParams()
+  const dispatch = useDispatch();
+
   const [friendData, setFriendData] = useState<Friend | undefined>(undefined)
 
   const chatBox = useRef<HTMLDivElement | null>(null)
@@ -26,29 +29,23 @@ const Chat = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [_isMessageSent, setIsMessageSent] = useState(false);
 
-  const [messages, setMessages] = useState<Message[]>([])
   const [showSendButton, setShowSendButton] = useState(false);
 
   const selectFriends = (state:any) => state.friends;
   const friends:Friend[] = useSelector(selectFriends);
 
+  const selectChat = (state:any) => state.chats;
+  const chat = useSelector(selectChat).find((chat:any) => chat._id === friendData?.chatId);
+  const [messages, setMessages] = useState([])
+
   const navigate = useNavigate();
 
-  
-  const getMessages = async (chatId:string) => {
-    try{
-      await requestHandler(
-        async () => await getAllMessages(chatId),
-        setIsLoading,
-        (res) => {
-          setMessages(res.data);
-        },
-        alert
-      )
-    }catch(error){
-      console.log(error);
+  useEffect(() => {
+    if(chat) {
+      setMessages(chat.messages)
     }
-  }
+  },[chat])
+
 
   useEffect(() => {
     if(messageInput.trim().length > 0){
@@ -58,27 +55,14 @@ const Chat = () => {
     }
   }, [messageInput])
 
-  useEffect(() => {
-    if(!friendData) return;
-    getMessages(friendData?.chatId)
-  }, [friendData])
   
   useEffect(() => {
     if(chatBox.current){
       chatBox.current.scrollTop = chatBox.current.scrollHeight;
     }
+    console.log(messages);
   },[messages])
 
-  useEffect(() => {
-    if(!socket) return;
-    socket.on('messageReceived', (message:Message) => {
-      if(message.chat !== id) return;
-      setMessages((prevMessages) => [ ...prevMessages, message]);
-    })
-    return () => {
-      
-    }
-  },[])
 
 
   useEffect(() => {
@@ -95,7 +79,9 @@ const Chat = () => {
       async () => await sentMessages(messageInput, friendData?.chatId),
       setIsMessageSent,
       (res) => {
-        setMessages((prevMessages) => [...prevMessages, res.data])
+        const message = res.data
+        console.log(message);
+        dispatch(addMessage({message, chatId: friendData?.chatId}))
         setMessageInput('')
       },
       alert
@@ -123,7 +109,7 @@ const Chat = () => {
             <div className="audio cursor-pointer py-[8px] px-[10px] bg-[#484747b1] hover:bg-[#555454d6] flex-center"><i className='bx bx-phone'></i></div>
           </div>
           <div className="search cursor-pointer py-[8px] px-[10px] hover:text-[#b6fc98] flex-center rounded-[5px]">
-            <i className="fa-solid fa-bars"></i>
+            <i className='bx bx-search-alt-2 py-[5px] pl-[5px]' ></i>
           </div>
         </div>
       </div>
@@ -142,7 +128,10 @@ const Chat = () => {
             :
             <div className="messages-container flex flex-col gap-[4px] custom-scrollbar px-[10px] py-[5px]">
               {
-                messages.map((message) => (
+                !messages ? 
+                <div></div>
+                :
+                messages.map((message:any) => (
                   <div key={message._id} className={`flex ${message.sender._id !== id? ' justify-end':' justify-start'} flex items-center `}>
                     <span  className={`${message.sender._id !== id ? 'bg-spacial-glass justify-center':'bg-black-glass justify-start'} text-white px-[8px] py-[3px] rounded-[5px]  inline-flex flex-col min-w-[2rem] text-[14px]`}>
                       <span className={`${message.sender._id !== id ? 'hidden': ''}  text-[10px] font-light text-[yellow]`}>~{message.sender.username}</span>

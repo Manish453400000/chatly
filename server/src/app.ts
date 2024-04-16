@@ -16,7 +16,7 @@ const server = createServer(app);
 const io = new Server(server, {
   pingTimeout: 60000,
   cors: {
-    origin: process.env.CORS_ORIGIN || "https://secret-chat-app-one.vercel.app/",
+    origin: process.env.CORS_ORIGIN || "http://localhost:3000",
     credentials: true,
   }
 })
@@ -57,12 +57,15 @@ io.on('connection', async (socket:any) => {
       if(!user) {
         throw new ApiError(401, "unAuthorized handshake. Token is invalid");
       }
-      
+      socket.on('login', () => {
+        console.log('user loged in');
+      })
       socket.user = user;
       socket.join(user._id.toString());
       console.log("User connected 🗼. userId: " + user?._id.toString() + " sId: " + socket.id);
 
       updateOnlineStatus(socket, true)
+
       
       socket.on('disconnect', async () => {
         console.log("user has disconnected 🚫. userId: " + socket.user?._id);
@@ -85,6 +88,7 @@ import { requestRouter } from './routers/request.routes';
 import { chatRouter } from './routers/chat.routes';
 import { updateOnlineStatus } from './socket';
 import { messageRouter } from './routers/message.routes';
+import { log } from 'console';
 
 app.use("/api/v1/user", userRouter)
 app.use("/api/v1/friend", requestRouter)
