@@ -1,10 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { Chats } from "../../interface/api";
 
-
-
-
-
 const initialState:Chats[] = [];
 
 export const chatSlice = createSlice({
@@ -27,6 +23,28 @@ export const chatSlice = createSlice({
       const group = action.payload.group;
       state.push(group);
     },
+    newMessageCame: (state, action) => {
+      return state.map(chat => {
+        if(chat._id === action.payload._id) {
+          return {
+            ...chat,
+            newMessageCount: (chat.newMessageCount || 0) + 1
+          };
+        }
+        return chat;
+      });
+    },
+    messageReaded: (state, action) => {
+      return state.map(chat => {
+        if(chat._id === action.payload._id) {
+          return {
+            ...chat,
+            newMessageCount: 0
+          };
+        }
+        return chat;
+      });
+    },
     updateOnlineState: (state:any, action) => {
       const id = action.payload.id;
       const status = action.payload.status;
@@ -47,6 +65,10 @@ export const chatSlice = createSlice({
             ...chat,
             messages: [...chat.messages, message]
           }
+        }else{
+          return {
+            ...chat
+          }
         }
       })
 
@@ -56,6 +78,6 @@ export const chatSlice = createSlice({
 })
 
 
-export const { addAllChats, addChat, addMessage, updateChat, removeChat, updateOnlineState } = chatSlice.actions;
+export const { addAllChats, addChat, newMessageCame, messageReaded, addMessage, updateChat, removeChat, updateOnlineState } = chatSlice.actions;
 export default chatSlice.reducer;
 

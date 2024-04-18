@@ -8,10 +8,10 @@ import { addAllFriends, addFriend, updateOnlineState } from '../../app/features/
 import { requestHandler } from '../../utils';
 import { createGroupChat, getAllFriends, getAllChats } from '../../api/api';
 import { useSocket } from '../../context/SocketContext';
-import { addAllChats, addChat, addMessage } from '../../app/features/chatsSlice';
+import { addAllChats, addChat, addMessage, newMessageCame } from '../../app/features/chatsSlice';
 
 //interface
-import { GroupChats, Message } from '../../interface/api';
+import { Chats, Message } from '../../interface/api';
 
 
 //skeleton chatList
@@ -44,6 +44,11 @@ interface Friend {
   _id: string,
 }
 
+interface MessageCount {
+  id: string;
+  count: number;
+}
+
 const ChatList = () => { 
 
   const location = useLocation();
@@ -67,7 +72,7 @@ const ChatList = () => {
   const selectFriends = (state:any) => state.friends
   const friends:Friend[] = useSelector(selectFriends)
   const selectChats = (state:any) => state.chats
-  const chats:GroupChats[] = useSelector(selectChats)
+  const chats:Chats[] = useSelector(selectChats)
 
   useEffect(() => {  
     if(socket) {
@@ -116,13 +121,13 @@ const ChatList = () => {
   useEffect(() => {
   if(!socket) return;
   socket.on('messageReceived', (message:Message) => {
-    console.log(message);
+    dispatch(newMessageCame({_id: message.chat}))
     dispatch(addMessage({message, chatId: message.chat}))
   })
   return () => {
     socket.off('messageReceived', (message:Message) => {
-    console.log(message);
-    dispatch(addMessage({message, chatId: message.chat}))
+      dispatch(newMessageCame({_id: message.chat}))
+      dispatch(addMessage({message, chatId: message.chat}))
   })
   }
   },[])
@@ -236,12 +241,21 @@ const ChatList = () => {
                       <div className={`${chat.participantDetails[0].isOnline ? 'online': ''} left w-[35px] h-[35px] rounded-full overflow-visible`}>
                         <img src={chat.participantDetails[0].avatar.url} alt={'avatar'} className='w-full object-cover object-center h-full rounded-full' loading='lazy' />
                       </div>
-                      <div className="right text-[14px] flex-1 ">
+                      <div className="middle text-[14px] flex-1 ">
                         <div className="name flex justify-between items-center w-full ">
                           <span>{chat.participantDetails[0].username}</span>
-                          <span className='text-[11px] text-[#d1d1d1]'>{'today'}</span>
                         </div>
                         <div className="last-messages whitespace-nowrap text-[12px] text-[#bebdbd] ">{chat.participantDetails[0].about}</div>
+                      </div>
+                      <div className="right overflow-hidden h-full flex flex-col justify-start items-center">
+                        <span className='text-[11px] text-[#d1d1d1]'>{'today'}</span>
+                        {
+                          chat.newMessageCount && chat.newMessageCount > 0 && (
+                            <span className='px-[5px] overflow-hidden text-[11px] mt-[4px] rounded-full bg-[#9fcf56] text-[black] flex-center font-[700]'>
+                            {chat.newMessageCount}
+                            </span>
+                          )
+                        }
                       </div>
                     </div>
                   :
@@ -252,9 +266,18 @@ const ChatList = () => {
                       <div className="right text-[14px] flex-1 ">
                         <div className="name flex justify-between items-center w-full ">
                           <span>{chat.name}</span>
-                          <span className='text-[11px] text-[#d1d1d1]'>{'today'}</span>
                         </div>
                         <div className="last-messages whitespace-nowrap text-[12px] text-[#bebdbd] ">{chat.admin || ''}</div>
+                      </div>
+                      <div className="right overflow-hidden h-full flex flex-col justify-start items-center">
+                        <span className='text-[11px] text-[#d1d1d1]'>{'today'}</span>
+                        {
+                          chat.newMessageCount && chat.newMessageCount > 0 && (
+                            <span className='px-[5px] overflow-hidden text-[11px] mt-[4px] rounded-full bg-[#9fcf56] text-[black] flex-center font-[700]'>
+                              {chat.newMessageCount}
+                            </span>
+                          )
+                        }
                       </div>
                     </div>
                 ))

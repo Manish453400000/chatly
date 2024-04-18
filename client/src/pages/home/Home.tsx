@@ -5,14 +5,11 @@ import { useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { User } from '../../interface/user'
 
-import { SocketProvider, useSocket } from '../../context/SocketContext'
 
 
 const Home = () => {
   const [showProfile, setShowProfile] = useState(false);
   const profileContainer = useRef<HTMLDivElement>(null);
-
-  const { socket } = useSocket();
 
   const navigate = useNavigate();
 
@@ -37,13 +34,6 @@ const Home = () => {
     __v: 0,
     _id: "",
   })
-
-  useEffect(() => {
-    if(!socket) return
-    socket.emit('login', userData.username)
-    return () => {
-    }
-  }, [socket])
 
   useEffect(() => {
     if(!data.isAuthenticated) return;
@@ -98,6 +88,7 @@ const Home = () => {
         </div>
       </div>
     </div>
+
   )
 }
 

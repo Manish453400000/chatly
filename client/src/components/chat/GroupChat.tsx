@@ -5,12 +5,12 @@ import { ChangeEvent, useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 
 import { User } from '../../interface/user';
-import {GroupChats, Message } from '../../interface/api';
+import { Chats, Message } from '../../interface/api';
 
 import { requestHandler } from '../../utils';
-import { editGroupAvatar, getAllMessages, sentMessages } from '../../api/api';
+import { editGroupAvatar, sentMessages } from '../../api/api';
 import { useSocket } from '../../context/SocketContext';
-import { updateChat } from '../../app/features/chatsSlice';
+import { messageReaded, updateChat } from '../../app/features/chatsSlice';
 
 
 const GroupChat = () => {
@@ -18,7 +18,7 @@ const GroupChat = () => {
   const {socket} = useSocket();
   
   const { id } = useParams()
-  const [GroupData, setGroupData] = useState<GroupChats | undefined>(undefined)
+  const [GroupData, setGroupData] = useState<Chats | undefined>(undefined)
 
   const chatBox = useRef<HTMLDivElement | null>(null)
 
@@ -37,25 +37,20 @@ const GroupChat = () => {
   const [showGroupBox, setShowGroupBox] = useState(false);
 
   const selectChats = (state:any) => state.chats;
-  const chats:GroupChats[] = useSelector(selectChats);
+  const chats:Chats[] = useSelector(selectChats);
 
   const navigate = useNavigate();
 
-  
-  const getMessages = async (chatId:string) => {
-    try{
-      await requestHandler(
-        async () => await getAllMessages(chatId),
-        setIsLoading,
-        (res) => {
-          setMessages(res.data);
-        },
-        alert
-      )
-    }catch(error){
-      console.log(error);
+  const selectChat = (state:any) => state.chats;
+  const chat = useSelector(selectChat).find((chat:any) => chat._id === id);
+
+
+  useEffect(() => {
+    if(chat) {
+      setMessages(chat.messages)
+      setGroupData(chat);
     }
-  }
+  },[chat])
 
   useEffect(() => {
     console.log(isAuthenticated);
@@ -70,11 +65,6 @@ const GroupChat = () => {
       setShowSendButton(false);
     }
   }, [messageInput])
-
-  useEffect(() => {
-    if(!GroupData) return;
-    getMessages(GroupData?._id)
-  }, [GroupData])
   
   useEffect(() => {
     if(chatBox.current){
@@ -82,20 +72,11 @@ const GroupChat = () => {
     }
   },[messages])
 
-  useEffect(() => {
-    if(!socket) return;
-    socket.on('messageReceived', (message:any) => {
-      setMessages((prevMessages) => [ ...prevMessages, message]);
-    })
-    return () => {
-      
-    }
-  },[])
 
 
   useEffect(() => {
     if (id) {
-      const chat:GroupChats | undefined = chats.find(chat => chat._id === id);
+      const chat:Chats | undefined = chats.find(chat => chat._id === id);
       setGroupData(chat)
     }
     
@@ -143,6 +124,13 @@ const GroupChat = () => {
       alert
     )
   }
+
+  useEffect(() => {
+    if(id) {
+      console.log(id);
+      dispatch(messageReaded({_id: id}))
+    }
+  },[id])
   
   return (
     <div className="chat-box-container bg-primary flex flex-col ">

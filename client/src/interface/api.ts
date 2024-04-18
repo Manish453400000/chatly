@@ -14,32 +14,6 @@ export interface Message {
   sender: User;
 }
 
-export interface GroupChats {
-  _id: string;
-  name: string;
-  groupAvatar: {
-    localPath: string;
-    url: string,
-    _id: string,
-  },
-  isGroupChat: boolean;
-  participants: [string],
-  admin: string;
-  createdAt: Date;
-  participantDetails: [
-    {
-      _id: string,
-      avatar: {
-        localPath: string;
-        url: string,
-        _id: string,
-      }, 
-      username: string,
-      about: string,
-      isOnline: boolean
-    }
-  ]
-}
 export interface Chats {
   _id: string,
   name: string,
@@ -49,6 +23,7 @@ export interface Chats {
     url: string,
     _id: string,
   },
+  newMessageCount?: number,
   participants: [string],
   admin: string,
   messages: Message[],

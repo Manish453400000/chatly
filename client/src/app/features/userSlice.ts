@@ -17,11 +17,11 @@ export const userSlice = createSlice({
       }
       return user
     },
-    // updateUser: () => {},
-    // removeUser: (state:any, _action) => {
-    //   const user = initialState;
-    //   state = user;
-    // }
+    updateUser: () => {},
+    removeUser: (state:any, _action) => {
+      const user = initialState;
+      state = user;
+    }
   }
 })
 

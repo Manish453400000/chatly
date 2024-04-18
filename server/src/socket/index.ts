@@ -1,3 +1,4 @@
+import { off } from "process";
 import { io } from "../app";
 import { User } from "../models/user.model";
 
@@ -23,7 +24,7 @@ export const updateOnlineStatus = async (socket:any, status: boolean) => {
   })
 
 
-}
+} 
 
 export const emitSocketEvent = (req:any, roomId:any, event:any, payload:any) => {
   req.app.get("io").in(roomId).emit(event, payload)

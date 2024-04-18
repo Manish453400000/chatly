@@ -5,30 +5,24 @@ import { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 
 import { Friend } from '../../interface/user';
-import { Chats, Message } from '../../interface/api';
 
 import { requestHandler } from '../../utils';
-import { getAllMessages, sentMessages } from '../../api/api';
-import { useSocket } from '../../context/SocketContext';
-import { addMessage } from '../../app/features/chatsSlice';
+import { sentMessages } from '../../api/api';
+import { addMessage, messageReaded } from '../../app/features/chatsSlice';
+
 
 
 const Chat = () => {
   
-  const {socket} = useSocket();
-  
   const { id } = useParams()
   const dispatch = useDispatch();
-
-  const [friendData, setFriendData] = useState<Friend | undefined>(undefined)
+  const navigate = useNavigate();
 
   const chatBox = useRef<HTMLDivElement | null>(null)
-
+  
+  const [friendData, setFriendData] = useState<Friend | undefined>(undefined)
   const [messageInput, setMessageInput] = useState('')
-
-  const [isLoading, setIsLoading] = useState(false);
   const [_isMessageSent, setIsMessageSent] = useState(false);
-
   const [showSendButton, setShowSendButton] = useState(false);
 
   const selectFriends = (state:any) => state.friends;
@@ -38,13 +32,18 @@ const Chat = () => {
   const chat = useSelector(selectChat).find((chat:any) => chat._id === friendData?.chatId);
   const [messages, setMessages] = useState([])
 
-  const navigate = useNavigate();
 
   useEffect(() => {
     if(chat) {
       setMessages(chat.messages)
     }
   },[chat])
+
+  useEffect(() => {
+    if(friendData?.chatId) {
+      dispatch(messageReaded({_id: friendData?.chatId}))
+    }
+  },[friendData?.chatId])
 
 
   useEffect(() => {
@@ -60,10 +59,7 @@ const Chat = () => {
     if(chatBox.current){
       chatBox.current.scrollTop = chatBox.current.scrollHeight;
     }
-    console.log(messages);
   },[messages])
-
-
 
   useEffect(() => {
     if (id) {
@@ -72,7 +68,6 @@ const Chat = () => {
     }
     
   },[id])
-
 
   const handelSentMessage = async() => {
     await requestHandler(
@@ -87,8 +82,6 @@ const Chat = () => {
       alert
     )
   }
-
-
   
   return (
     <div className="chat-box-container bg-primary flex flex-col relative">
@@ -105,7 +98,7 @@ const Chat = () => {
         </div>
         <div className="right flex items-center text-[20px] gap-[5px]">
           <div className="call-btn hidden md:flex items-center gap-[1px] rounded-[5px]">
-            <div className="vedio cursor-pointer py-[8px] px-[10px] bg-[#484747b1] hover:bg-[#555454d6] flex-center"><i className='bx bx-video'></i></div>
+            <div className="vedio cursor-pointer py-[8px] px-[10px] bg-[#484747b1] hover:bg-[#555454d6] flex-center" onClick={() => ''}><i className='bx bx-video'></i></div>
             <div className="audio cursor-pointer py-[8px] px-[10px] bg-[#484747b1] hover:bg-[#555454d6] flex-center"><i className='bx bx-phone'></i></div>
           </div>
           <div className="search cursor-pointer py-[8px] px-[10px] hover:text-[#b6fc98] flex-center rounded-[5px]">
@@ -115,17 +108,6 @@ const Chat = () => {
       </div>
 
       <div className="chat-box flex-1 pb-[10px] custom-scrollbar" ref={chatBox}>
-        {
-          isLoading ? 
-            <div className='w-full h-full flex-center'>
-              <div className='flex flex-col justify-center items-center'>
-                <span className='text-[28px] '>
-                  <i className="fa-solid fa-gear fa-spin"></i>
-                </span>
-                <span className='text-[20px] text-[gray] pl-[10px]'>Initializing...</span>
-              </div>
-            </div>
-            :
             <div className="messages-container flex flex-col gap-[4px] custom-scrollbar px-[10px] py-[5px]">
               {
                 !messages ? 
@@ -142,7 +124,6 @@ const Chat = () => {
                 ))
               }
             </div>
-        }
         
       </div>
 
@@ -165,7 +146,6 @@ const Chat = () => {
           }
           </span>
       </div>
-
     </div>
   )
 }
