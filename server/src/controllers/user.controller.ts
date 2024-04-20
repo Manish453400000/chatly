@@ -231,7 +231,8 @@ const getUser = asyncHandler(async(req, res) => {
   const refreshdUser = await User.findByIdAndUpdate(user._id, {refreshToken: refreshToken,}).select("-password -refreshToken")
   const options = {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production'
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: false
   }
 
   return res

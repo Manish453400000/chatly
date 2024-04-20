@@ -171,7 +171,8 @@ const getUser = (0, asyncHandler_js_1.asyncHandler)(async (req, res) => {
     const refreshdUser = await user_model_js_1.User.findByIdAndUpdate(user._id, { refreshToken: refreshToken, }).select("-password -refreshToken");
     const options = {
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production'
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: false
     };
     return res
         .status(200)
