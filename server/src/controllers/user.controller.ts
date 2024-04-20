@@ -6,6 +6,7 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { userRolesEnum } from "../utils/constants.js";
 import { ApiResponse } from "../utils/apiResponse.js";
 import { cloudinaryUpload } from '../utils/cloudinary.js';
+import { CookieOptions } from 'express';
 
 const generateTokens = async (userId: Types.ObjectId) => {
   try {
@@ -45,9 +46,10 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new ApiError(500, "Failed to generate tokens")
   }
   const createdUser = await User.findById(user._id).select("-password -refreshToken");
-  const options = {
+  const options:CookieOptions = {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
+    sameSite: 'none',
   }
   return res
   .status(200)
@@ -110,9 +112,9 @@ const logoutUser = asyncHandler(async (req, res) => {
     { new: true }
   )
 
-  const options = {
+  const options:CookieOptions = {
     httpOnly: true,
-    SamSite: 'None',
+    sameSite: 'none',
     secure: process.env.NODE_ENV === 'production', 
   }
   return res
@@ -202,10 +204,11 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
   if(incomingRefreshToken !== user?.refreshToken) {
     throw new ApiError(401, "Refresh token has expired or used")
   }
-  const options = {
+  const options: CookieOptions = {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-  }; 
+    secure: true,
+    sameSite: "none",
+  };; 
 
   const { accessToken, refreshToken: newRefreshToken } = await generateTokens(user._id)
 
@@ -229,11 +232,11 @@ const getUser = asyncHandler(async(req, res) => {
   const { user } = req.body;
   const { accessToken, refreshToken } = await generateTokens(user._id);
   const refreshdUser = await User.findByIdAndUpdate(user._id, {refreshToken: refreshToken,}).select("-password -refreshToken")
-  const options = {
+  const options:CookieOptions = {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: false,
-  }
+    secure: true,
+    sameSite: "none",
+  };
 
   return res
   .status(200)
