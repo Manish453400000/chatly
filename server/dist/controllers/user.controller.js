@@ -48,6 +48,7 @@ const registerUser = (0, asyncHandler_js_1.asyncHandler)(async (req, res) => {
     const options = {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
+        sameSite: 'none',
     };
     return res
         .status(200)
@@ -91,7 +92,7 @@ const logoutUser = (0, asyncHandler_js_1.asyncHandler)(async (req, res) => {
     }, { new: true });
     const options = {
         httpOnly: true,
-        SamSite: 'None',
+        sameSite: 'none',
         secure: process.env.NODE_ENV === 'production',
     };
     return res
@@ -153,8 +154,10 @@ const refreshAccessToken = (0, asyncHandler_js_1.asyncHandler)(async (req, res) 
     }
     const options = {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
+        secure: true,
+        sameSite: "none",
     };
+    ;
     const { accessToken, refreshToken: newRefreshToken } = await generateTokens(user._id);
     return res
         .status(200)
@@ -171,8 +174,8 @@ const getUser = (0, asyncHandler_js_1.asyncHandler)(async (req, res) => {
     const refreshdUser = await user_model_js_1.User.findByIdAndUpdate(user._id, { refreshToken: refreshToken, }).select("-password -refreshToken");
     const options = {
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: false,
+        secure: true,
+        sameSite: "none",
     };
     return res
         .status(200)
