@@ -6,7 +6,7 @@
   "scripts": {
     "start": "concurrently \"npm run build\" \"npm run server\"",
     "server": "node ./dist/server.js",
-    "build": "npx tsc -b -w",
+    "build": "npx tsc -b",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
