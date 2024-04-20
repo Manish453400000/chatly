@@ -28,13 +28,15 @@ export const friendSlice = createSlice({
       state.push(friend);
     },
     updateOnlineState: (state, action) => {
-      const id = action.payload.id;
-      const status = action.payload.status;
-      state.filter(friend => {
-        if (friend._id === id) {
-          friend.isOnline = status
+      return state.map(friend => {
+        if(friend._id === action.payload.id) {
+          return {
+            ...friend,
+            isOnline: action.payload.status
+          };
         }
-      })
+        return friend;
+      });
     },
     removeFriend: (state, action) => {
        state.filter((request:any) => request._id !== action.payload.id)

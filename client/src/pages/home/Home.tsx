@@ -63,7 +63,6 @@ const Home = () => {
           <span className={`${activeNav == 'requests' ? 'active':''} nav-btns cursor-pointer`} onClick={() => handelNavigation('requests')}><i className='bx bx-search-alt-2'></i></span>
         </div>
         <div className="bottom">
-          <span className={`${activeNav == 'status' ? 'active':''} nav-btns cursor-pointer`}><i className='bx bx-star' ></i></span>
           <span className={`${activeNav == 'setting' ? 'active':''} nav-btns cursor-pointer`} onClick={() => setShowProfile(prev => !prev)}><i className='bx bx-cog' ></i></span>
           <div className=' rounded-full w-[25px] aspect-square' onClick={() => setShowProfile(prev => !prev)}>
             <img src={userData.avatar.url} alt="profile" />

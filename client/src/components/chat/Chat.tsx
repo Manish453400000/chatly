@@ -108,7 +108,7 @@ const Chat = () => {
       </div>
 
       <div className="chat-box flex-1 pb-[10px] custom-scrollbar" ref={chatBox}>
-            <div className="messages-container flex flex-col gap-[4px] custom-scrollbar px-[10px] py-[5px]">
+            <div className="messages-container flex flex-col gap-[4px] custom-scrollbar px-[10px] py-[5px] max-w-[50rem] m-auto">
               {
                 !messages ? 
                 <div></div>

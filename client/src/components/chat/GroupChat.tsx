@@ -244,7 +244,7 @@ const GroupChat = () => {
               </div>
             </div>
             :
-            <div className="messages-container flex flex-col gap-[4px] custom-scrollbar px-[10px] py-[5px]">
+            <div className="messages-container flex flex-col gap-[4px] custom-scrollbar px-[10px] py-[5px] max-w-[50rem] m-auto">
               {
                 messages.map((message) => (
                   <div key={message._id} className={` ${message.sender._id === user._id? ' justify-end':' justify-start'} flex items-center`}>

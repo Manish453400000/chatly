@@ -1,7 +1,7 @@
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import './Chats.scss'
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { addAllFriends, addFriend, updateOnlineState } from '../../app/features/friendSlice';
 
@@ -74,9 +74,18 @@ const ChatList = () => {
   const selectChats = (state:any) => state.chats
   const chats:Chats[] = useSelector(selectChats)
 
+  const [lastLocationPath, setLastLocationPath] = useState('');
+
+  useEffect(() => {
+    const locationPath = location.pathname.split('/')
+    const lastPath = locationPath[locationPath.length - 1];
+    setLastLocationPath(lastPath)
+  },[location.pathname])
+
   useEffect(() => {  
     if(socket) {
       socket.on('onlineStatus', (data:{id: string, status: Boolean}) => {
+        console.log(data);  
         dispatch(updateOnlineState(data))
       })
 
@@ -117,20 +126,27 @@ const ChatList = () => {
     }
   },[])
 
+  const handleNewMessageCount = useCallback((message:Message) => {
+    dispatch(addMessage({message, chatId: message.chat}))
+    console.log("ll: ",lastLocationPath, "mc: ",message.chat);
+    if(!(lastLocationPath === message.chat)){
+      dispatch(newMessageCame({_id: message.chat}))
+    }
+  },[lastLocationPath])
+
 
   useEffect(() => {
   if(!socket) return;
   socket.on('messageReceived', (message:Message) => {
-    dispatch(newMessageCame({_id: message.chat}))
-    dispatch(addMessage({message, chatId: message.chat}))
+    handleNewMessageCount(message);
+    
   })
   return () => {
     socket.off('messageReceived', (message:Message) => {
-      dispatch(newMessageCame({_id: message.chat}))
-      dispatch(addMessage({message, chatId: message.chat}))
-  })
+      handleNewMessageCount(message);
+    })
   }
-  },[])
+  },[socket])
 
   const [isMobile, setIsMobile] = useState(false);
   useEffect(() => {
@@ -238,22 +254,25 @@ const ChatList = () => {
                 chats.map((chat) => (
                   !chat.isGroupChat ? 
                     <div className='w-full flex-shrink-0 flex items-center gap-[10px] py-[10px] px-[.5rem] hover:bg-[#373737] rounded-[5px] cursor-pointer' key={chat._id} onClick={() => navigate(`/app/home/chats/user/${chat.participantDetails[0]._id}`)}>
-                      <div className={`${chat.participantDetails[0].isOnline ? 'online': ''} left w-[35px] h-[35px] rounded-full overflow-visible`}>
+                      <div className={`${friends.map(f => f._id === chat.participantDetails[0]._id && f.isOnline ? ' online ':'')} left w-[35px] h-[35px] rounded-full overflow-visible`}>
                         <img src={chat.participantDetails[0].avatar.url} alt={'avatar'} className='w-full object-cover object-center h-full rounded-full' loading='lazy' />
                       </div>
                       <div className="middle text-[14px] flex-1 ">
                         <div className="name flex justify-between items-center w-full ">
-                          <span>{chat.participantDetails[0].username}</span>
+                          <span>{chat.participantDetails[0].username} </span>
                         </div>
                         <div className="last-messages whitespace-nowrap text-[12px] text-[#bebdbd] ">{chat.participantDetails[0].about}</div>
                       </div>
                       <div className="right overflow-hidden h-full flex flex-col justify-start items-center">
                         <span className='text-[11px] text-[#d1d1d1]'>{'today'}</span>
                         {
-                          chat.newMessageCount && chat.newMessageCount > 0 && (
+                          chat.newMessageCount && chat.newMessageCount > 0 ? (
                             <span className='px-[5px] overflow-hidden text-[11px] mt-[4px] rounded-full bg-[#9fcf56] text-[black] flex-center font-[700]'>
-                            {chat.newMessageCount}
+                              {chat.newMessageCount}
                             </span>
+                          ):
+                          (
+                            <span></span>
                           )
                         }
                       </div>
@@ -272,10 +291,13 @@ const ChatList = () => {
                       <div className="right overflow-hidden h-full flex flex-col justify-start items-center">
                         <span className='text-[11px] text-[#d1d1d1]'>{'today'}</span>
                         {
-                          chat.newMessageCount && chat.newMessageCount > 0 && (
+                          chat.newMessageCount && chat.newMessageCount > 0 ? (
                             <span className='px-[5px] overflow-hidden text-[11px] mt-[4px] rounded-full bg-[#9fcf56] text-[black] flex-center font-[700]'>
                               {chat.newMessageCount}
                             </span>
+                          ):
+                          (
+                            <span></span>
                           )
                         }
                       </div>
