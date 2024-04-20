@@ -1,0 +1,16 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.requestRouter = void 0;
+const express_1 = require("express");
+const auth_middleware_1 = require("../middleware/auth.middleware");
+const request_controller_1 = require("../controllers/request.controller");
+const requestRouter = (0, express_1.Router)();
+exports.requestRouter = requestRouter;
+requestRouter.use(auth_middleware_1.verifyJwt);
+requestRouter.route('/search').get(request_controller_1.searchUsers);
+requestRouter.route('/request/sent').post(request_controller_1.sentRequest);
+requestRouter.route('/request/get-requests').get(request_controller_1.getAllRequest);
+requestRouter.route('/request/accept').get(request_controller_1.acceptRequest);
+requestRouter.route('/request/reject').get(request_controller_1.rejectRequest);
+requestRouter.route('/get-friends').get(request_controller_1.getAllFriends);
+requestRouter.route('/unfriend').get(request_controller_1.deleteFriendShip);
