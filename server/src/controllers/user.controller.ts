@@ -232,7 +232,7 @@ const getUser = asyncHandler(async(req, res) => {
   const options = {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
-    sameSite: false
+    sameSite: false,
   }
 
   return res
