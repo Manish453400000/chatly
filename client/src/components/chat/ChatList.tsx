@@ -44,10 +44,6 @@ interface Friend {
   _id: string,
 }
 
-interface MessageCount {
-  id: string;
-  count: number;
-}
 
 const ChatList = () => { 
 

@@ -9,13 +9,13 @@ import { Chats, Message } from '../../interface/api';
 
 import { requestHandler } from '../../utils';
 import { editGroupAvatar, sentMessages } from '../../api/api';
-import { useSocket } from '../../context/SocketContext';
+// import { useSocket } from '../../context/SocketContext';
 import { messageReaded, updateChat } from '../../app/features/chatsSlice';
 
 
 const GroupChat = () => {
   
-  const {socket} = useSocket();
+  // const {socket} = useSocket();
   
   const { id } = useParams()
   const [GroupData, setGroupData] = useState<Chats | undefined>(undefined)
@@ -29,7 +29,7 @@ const GroupChat = () => {
 
   const [messageInput, setMessageInput] = useState('')
 
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, _setIsLoading] = useState(false);
   const [_isMessageSent, setIsMessageSent] = useState(false);
 
   const [messages, setMessages] = useState<Message[]>([])

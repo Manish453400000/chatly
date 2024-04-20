@@ -4,7 +4,7 @@ import friendReducer from "./features/friendSlice";
 import chatReducer from "./features/chatsSlice"
 
 import { Friend } from "./features/friendSlice";
-import { Chat } from "./features/chatsSlice";
+import { Chats } from "../interface/api";
 
 const rootReducer = combineReducers({
   user: userReducer,
@@ -13,7 +13,7 @@ const rootReducer = combineReducers({
 })
 
 const friend: Friend[] = []
-const chat: Chat[] = []
+const chat: Chats[] = []
 
 export const initialState = {
   user: {

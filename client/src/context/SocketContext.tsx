@@ -1,15 +1,7 @@
-import React, { createContext, useContext, useEffect, useMemo, useState } from 'react'
+import React, { createContext, useContext, useEffect, useMemo } from 'react'
 import io from 'socket.io-client'
 import { LocalStorage } from '../utils';
 
-const getSocket = () => {
-  const token = LocalStorage.get("token");
-
-  return io('http://localhost:8080', {
-    withCredentials: true,
-    auth: { token }
-  });
-}
 
 export const SocketContext = createContext<{
   socket: ReturnType<typeof io> | null
@@ -25,7 +17,7 @@ const SocketProvider: React.FC<{children: React.ReactNode}> = ({children}) => {
   
   const socket = useMemo(() => {
     if(!token) return null;
-    return io('http://localhost:8080', {
+    return io(import.meta.env.VITE_SOCKET_URI, {
     withCredentials: true,
     auth: { token }
   }); 
