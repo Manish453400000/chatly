@@ -81,9 +81,10 @@ const loginUser = asyncHandler(async (req, res) => {
     "-password -refreshToken"
   );
 
-  const options = {
+  const options:CookieOptions = {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production', 
+    sameSite: 'none'
   }
 
   return res

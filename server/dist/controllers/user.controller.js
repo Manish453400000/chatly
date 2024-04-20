@@ -75,6 +75,7 @@ const loginUser = (0, asyncHandler_js_1.asyncHandler)(async (req, res) => {
     const options = {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
+        sameSite: 'none'
     };
     return res
         .status(200)
