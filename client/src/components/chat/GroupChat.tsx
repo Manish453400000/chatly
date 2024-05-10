@@ -83,6 +83,7 @@ const GroupChat = () => {
   },[id])
 
   const handelSentMessage = async() => {
+    if(!GroupData) return;
     await requestHandler(
       async () => await sentMessages(messageInput, GroupData?._id),
       setIsMessageSent,

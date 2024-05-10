@@ -70,7 +70,7 @@ const ChatList = () => {
   const selectChats = (state:any) => state.chats
   const chats:Chats[] = useSelector(selectChats)
 
-  const [lastLocationPath, setLastLocationPath] = useState('');
+  const [lastLocationPath, _setLastLocationPath] = useState('');
 
   useEffect(() => {  
     if(socket) {
