@@ -48,7 +48,7 @@ const registerUser = (0, asyncHandler_js_1.asyncHandler)(async (req, res) => {
     const options = {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
-        sameSite: 'none',
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
     };
     return res
         .status(200)
@@ -72,10 +72,11 @@ const loginUser = (0, asyncHandler_js_1.asyncHandler)(async (req, res) => {
     }
     const { accessToken, refreshToken } = await generateTokens(user._id);
     const logedInUser = await user_model_js_1.User.findById(user._id).select("-password -refreshToken");
+    console.log(process.env.NODE_ENV);
     const options = {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
-        sameSite: 'none'
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
     };
     return res
         .status(200)
@@ -93,7 +94,7 @@ const logoutUser = (0, asyncHandler_js_1.asyncHandler)(async (req, res) => {
     }, { new: true });
     const options = {
         httpOnly: true,
-        sameSite: 'none',
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
         secure: process.env.NODE_ENV === 'production',
     };
     return res
@@ -155,10 +156,9 @@ const refreshAccessToken = (0, asyncHandler_js_1.asyncHandler)(async (req, res) 
     }
     const options = {
         httpOnly: true,
-        secure: true,
-        sameSite: "none",
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
     };
-    ;
     const { accessToken, refreshToken: newRefreshToken } = await generateTokens(user._id);
     return res
         .status(200)
@@ -175,8 +175,8 @@ const getUser = (0, asyncHandler_js_1.asyncHandler)(async (req, res) => {
     const refreshdUser = await user_model_js_1.User.findByIdAndUpdate(user._id, { refreshToken: refreshToken, }).select("-password -refreshToken");
     const options = {
         httpOnly: true,
-        secure: true,
-        sameSite: "none",
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
     };
     return res
         .status(200)

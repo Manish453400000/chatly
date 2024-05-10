@@ -65,6 +65,9 @@ io.on('connection', async (socket:any) => {
       console.log("User connected 🗼. userId: " + user?._id.toString() + " sId: " + socket.id);
 
       updateOnlineStatus(socket, true)
+      mountParticipantTyping(socket);
+      mountParticipantStopTyping(socket);
+      callEvents(socket);
       
       socket.on('disconnect', async () => {
         console.log("user has disconnected 🚫. userId: " + socket.user?._id);
@@ -85,7 +88,7 @@ io.on('connection', async (socket:any) => {
 import { userRouter } from './routers/user.routes';
 import { requestRouter } from './routers/request.routes';
 import { chatRouter } from './routers/chat.routes';
-import { updateOnlineStatus } from './socket';
+import { callEvents, mountParticipantStopTyping, mountParticipantTyping, updateOnlineStatus } from './socket';
 import { messageRouter } from './routers/message.routes';
 
 app.use("/api/v1/user", userRouter)

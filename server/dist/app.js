@@ -58,6 +58,9 @@ io.on('connection', async (socket) => {
         socket.join(user._id.toString());
         console.log("User connected 🗼. userId: " + user?._id.toString() + " sId: " + socket.id);
         (0, socket_1.updateOnlineStatus)(socket, true);
+        (0, socket_1.mountParticipantTyping)(socket);
+        (0, socket_1.mountParticipantStopTyping)(socket);
+        (0, socket_1.callEvents)(socket);
         socket.on('disconnect', async () => {
             console.log("user has disconnected 🚫. userId: " + socket.user?._id);
             (0, socket_1.updateOnlineStatus)(socket, false);

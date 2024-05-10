@@ -17,7 +17,7 @@ const SocketProvider: React.FC<{children: React.ReactNode}> = ({children}) => {
   
   const socket = useMemo(() => {
     if(!token) return null;
-    return io(import.meta.env.VITE_SOCKET_URI, {
+    return io('http://localhost:8080', {
     withCredentials: true,
     auth: { token }
   }); 

@@ -66,3 +66,18 @@ export const debouncer: (
     }, delay);
   };
 };
+
+
+
+export const mongoLocalTimeConverter = (timeString: string) => {
+  var utcDate = new Date(timeString);
+
+  // Get hours and minutes in UTC
+  var hours = utcDate.getUTCHours();
+  var minutes = utcDate.getUTCMinutes();
+
+  // Format the time
+  var formattedTime = hours.toString().padStart(2, '0') + ':' + minutes.toString().padStart(2, '0');
+
+  return formattedTime;
+};

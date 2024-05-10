@@ -72,12 +72,6 @@ const ChatList = () => {
 
   const [lastLocationPath, setLastLocationPath] = useState('');
 
-  useEffect(() => {
-    const locationPath = location.pathname.split('/')
-    const lastPath = locationPath[locationPath.length - 1];
-    setLastLocationPath(lastPath)
-  },[location.pathname])
-
   useEffect(() => {  
     if(socket) {
       socket.on('onlineStatus', (data:{id: string, status: Boolean}) => {
@@ -128,7 +122,7 @@ const ChatList = () => {
     if(!(lastLocationPath === message.chat)){
       dispatch(newMessageCame({_id: message.chat}))
     }
-  },[lastLocationPath])
+  },[lastLocationPath, location])
 
 
   useEffect(() => {

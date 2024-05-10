@@ -8,7 +8,7 @@ const apiClient = axios.create({
   withCredentials: true,
   timeout: 120000,
   headers: {
-    // 'Content-Type': 'application/json',  // this thing will prevent sending files;
+    // 'Content-Type': 'multipart/form-data',  // this thing will prevent sending files;
     'Authorization': `Bearer ${token}`
   }
 })
@@ -77,10 +77,7 @@ const getAllMessages = (chatId:string) => {
   return apiClient.get(`messages/get?chatId=${chatId}`);
 }
 
-const sentMessages = (content:string , chatId:string | undefined) => {
-  const data = {
-    content: content,
-  }
+const sentMessages = (data:any, chatId:string) => {
   return apiClient.post(`messages/send?chatId=${chatId}`, data);
 }
 

@@ -52,7 +52,7 @@ const SignUp = () => {
   }, [username, password, email])
   const handelSignUp = async (e:React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if(username.trim().length <= 6 || password.trim().length <= 6) {
+    if(username.trim().length < 6 || password.trim().length < 6) {
       console.log(data);
       return
     }

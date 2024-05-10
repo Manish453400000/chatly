@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { Friend } from '../../interface/user';
 
-import { requestHandler } from '../../utils';
+import { mongoLocalTimeConverter, requestHandler } from '../../utils';
 import { sentMessages } from '../../api/api';
 import { addMessage, messageReaded } from '../../app/features/chatsSlice';
 
@@ -32,6 +32,7 @@ const Chat = () => {
   const chat = useSelector(selectChat).find((chat:any) => chat._id === friendData?.chatId);
   const [messages, setMessages] = useState([])
 
+  const [attachments, setAttachments] = useState<File[]>([])
 
   useEffect(() => {
     if(chat) {
@@ -70,8 +71,13 @@ const Chat = () => {
   },[id])
 
   const handelSentMessage = async() => {
+    const data = {
+      content: messageInput
+    }
+    
+    if(!friendData) return
     await requestHandler(
-      async () => await sentMessages(messageInput, friendData?.chatId),
+      async () => await sentMessages(data, friendData.chatId),
       setIsMessageSent,
       (res) => {
         const message = res.data
@@ -82,6 +88,20 @@ const Chat = () => {
       alert
     )
   }
+
+  useEffect(() => {
+    if(attachments.length > 0){
+      setShowSendButton(true)
+    }else{
+      setShowSendButton(false)
+    }
+    
+  },[attachments])
+
+  // const initialVedioCall = () => {
+  //   const routePath = `/app/home/calls/${friendData?._id}`
+    
+  // }
   
   return (
     <div className="chat-box-container bg-primary flex flex-col relative">
@@ -98,7 +118,8 @@ const Chat = () => {
         </div>
         <div className="right flex items-center text-[20px] gap-[5px]">
           <div className="call-btn hidden md:flex items-center gap-[1px] rounded-[5px]">
-            <div className="vedio cursor-pointer py-[8px] px-[10px] bg-[#484747b1] hover:bg-[#555454d6] flex-center" onClick={() => ''}><i className='bx bx-video'></i></div>
+            <div className="vedio cursor-pointer py-[8px] px-[10px] bg-[#484747b1] hover:bg-[#555454d6] flex-center" onClick={() => navigate(`/app/home/calls/` + friendData?._id)}><i className='bx bx-video'></i>
+            </div>
             <div className="audio cursor-pointer py-[8px] px-[10px] bg-[#484747b1] hover:bg-[#555454d6] flex-center"><i className='bx bx-phone'></i></div>
           </div>
           <div className="search cursor-pointer py-[8px] px-[10px] hover:text-[#b6fc98] flex-center rounded-[5px]">
@@ -117,10 +138,12 @@ const Chat = () => {
                   <div key={message._id} className={`flex ${message.sender._id !== id? ' justify-end':' justify-start'} flex items-center `}>
                     <span  className={`${message.sender._id !== id ? 'bg-spacial-glass justify-center':'bg-black-glass justify-start'} text-white px-[8px] py-[3px] rounded-[5px]  inline-flex flex-col min-w-[2rem] text-[14px]`}>
                       <span className={`${message.sender._id !== id ? 'hidden': ''}  text-[10px] font-light text-[yellow]`}>~{message.sender.username}</span>
-                      <span className='message-font'>{message.content}</span>
-                      {/* <span>{}</span> */}
+                      <span className='h-[1.5rem] flex justify-between items-start'>
+                        <span className='message-font pr-[10px]'>{message.content}</span>
+                        <span className={`text-[10px] pt-[8px] h-full font-light text-[#ffffff]`}>{mongoLocalTimeConverter(message.createdAt)}</span>
+                      </span>
                     </span>
-                  </div>
+                  </div> 
                 ))
               }
             </div>
@@ -129,15 +152,50 @@ const Chat = () => {
 
       <div className="chat-box-footer w-full h-[4rem] px-[.5rem] bg-secondary flex gap-[8px] items-center text-[20px]">
         <span><i className='bx bx-smile p-[8px] flex-center hover:bg-[#5a57577b] rounded-[5px]'></i></span>
-        <span><i className="fa-solid fa-paperclip text-[16px]"></i></span>
+        <input 
+        hidden
+        id="attachment"
+        type="file"
+        value=""
+        multiple
+        max={5}
+        onChange={(e) => {
+          if(e.target.files){
+            setAttachments([...e.target.files])
+          }
+        }}
+        />
+        <label 
+        htmlFor="attachment" className=' p-[10px] flex-center mt-[5px] hover:bg-[#5a57577b] rounded-[5px]'>
+          <i className="fa-solid fa-paperclip text-[16px]"></i>
+        </label>
+        <span className={`${attachments.length < 1 ? 'hidden': ''} flex-1 flex gap-[5px]`}>
+          {attachments.length > 0 ?
+          <span className='flex gap-[5px]'>{
+            attachments.map(a => (
+              <span className='text-[#c1c1c1] text-[11px] bg-[#444343] px-[6px] py-[3px] rounded-[5px] flex items-center gap-[4px]'>
+                <span>{a.name}</span>
+                <span 
+                className='text-[10px] font-light flex-center'
+                onClick={() => {
+                  setAttachments(prev => prev.filter(pa => pa.name !== a.name))
+                }}
+                ><i className="fa-solid fa-x"></i></span>
+              </span>
+            ))       
+          }</span>
+          :
+          <span></span>
+          }
+        </span>
         <input 
         type="text" 
         placeholder='Type a message' 
-        className='text-[14px] bg-transparent px-[5px] py-[5px] flex-1 border-none outline-none'
+        className={`text-[14px] bg-transparent px-[5px] py-[5px] flex-1 border-none outline-none ${attachments.length > 0? 'hidden': ''}`}
         value={messageInput}
         onChange={(e) => setMessageInput(e.target.value)}
         />
-        <span className='p-[8px] flex-center hover:bg-[#5a57577b] bg-[#4643437b] rounded-[5px] mr-[10px] cursor-pointer' onClick={handelSentMessage}>
+        <span className='p-[8px] flex-center justify-self-end hover:bg-[#5a57577b] bg-[#4643437b] rounded-[5px] mr-[10px] cursor-pointer' onClick={handelSentMessage}>
           {
             showSendButton?
             <i className="fa-solid m-[6px] fa-paper-plane text-[#44e044] text-[16px]"></i>

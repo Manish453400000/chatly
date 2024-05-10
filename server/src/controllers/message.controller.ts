@@ -42,7 +42,7 @@ const sendMessage = asyncHandler(async (req:any | Request, res) => {
   if(!content && !req.files?.attachments?.length){
     throw new ApiError(400, "content is required")
   }
-
+  console.log(chatId);
   const selectChat = await Chat.findById(chatId);
   if(!selectChat) {
     throw new ApiError(400, "Chat does not exist")
@@ -65,7 +65,7 @@ const sendMessage = asyncHandler(async (req:any | Request, res) => {
     chat: new mongoose.Types.ObjectId(chatId),
     attachments: messageFiles,
   })
-
+  
   
   const chat = await Chat.findByIdAndUpdate(
     chatId,

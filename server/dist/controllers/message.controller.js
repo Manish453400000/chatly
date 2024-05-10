@@ -44,6 +44,7 @@ const sendMessage = (0, asyncHandler_1.asyncHandler)(async (req, res) => {
     if (!content && !req.files?.attachments?.length) {
         throw new apiError_1.ApiError(400, "content is required");
     }
+    console.log(chatId);
     const selectChat = await chat_model_1.Chat.findById(chatId);
     if (!selectChat) {
         throw new apiError_1.ApiError(400, "Chat does not exist");

@@ -49,10 +49,12 @@ const Login = () => {
   // Function to handel Login
   const handelLogin = async (e:React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if(username.trim().length <= 6 || password.trim().length <= 6) {
+    if(username.trim().length < 6 || password.trim().length < 6) {
       alert("please enter valid username and password")
       return
     }
+    console.log(data);
+    
     await requestHandler(
       async () => await loginUser(data),
       setIsLoading,
