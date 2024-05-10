@@ -20,14 +20,14 @@ exports.server = server;
 const io = new socket_io_1.Server(server, {
     pingTimeout: 60000,
     cors: {
-        origin: process.env.CORS_ORIGIN || "http://localhost:3000",
+        origin: process.env.CORS_ORIGIN || "https://secret-chat-app-one.vercel.app",
         credentials: true,
     }
 });
 exports.io = io;
 app.set("io", io); //using this to avoid usage of `global` variables
 app.use((0, cors_1.default)({
-    origin: process.env.CORS_ORIGIN || "https://secret-chat-app-one.vercel.app/",
+    origin: process.env.CORS_ORIGIN || "https://secret-chat-app-one.vercel.app",
     credentials: true,
 }));
 app.use(express_1.default.json({ limit: "16kb" }));
